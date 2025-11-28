@@ -2,13 +2,8 @@
 import React from "react";
 import { useStock } from "../../context/StockCon";
 const PortfolioSummary = () => {
-  const {
-    stocks,
-    getPortfolioValue,
-    getTotalInvested,
-    getPortfolioReturn,
-    clearPortfolio,
-  } = useStock();
+  const { stocks, getPortfolioValue, getTotalInvested, getPortfolioReturn } =
+    useStock();
   const portfolioValue = getPortfolioValue();
   const totalInvested = getTotalInvested();
   const portfolioReturn = getPortfolioReturn();
@@ -42,13 +37,6 @@ const PortfolioSummary = () => {
     <div className="portfolio-summary">
       <div className="summary-header">
         <h2>Portfolio Summary</h2>
-        <button
-          onClick={clearPortfolio}
-          className="clear-portfolio-btn"
-          title="Clear all stocks"
-        >
-          Clear Portfolio
-        </button>
       </div>
       <div className="summary-grid">
         <div className="summary-card total-value">

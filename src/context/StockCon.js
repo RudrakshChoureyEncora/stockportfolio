@@ -142,34 +142,11 @@ export const StockProvider = ({ children }) => {
           { timeStamp: "2025-11-27T09:30:40Z", price: 2861.3 },
         ],
       },
-      {
-        stockId: "TCS",
-        name: "Tata Consultancy Services",
-        symbol: "TCS",
-        currentPrice: 3650.2,
-        history: [
-          {
-            timeStamp: "2025-11-27T09:25:10Z",
-            price: 3645.8,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:20Z",
-            price: 3648.3,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:30Z",
-            price: 3650.0,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:40Z",
-            price: 3650.2,
-          },
-        ],
-      },
+
       {
         stockId: "TCS2",
         name: "Tata Consultancy Services",
-        symbol: "TCS",
+        symbol: "TCS2",
         currentPrice: 3650.2,
         history: [
           {

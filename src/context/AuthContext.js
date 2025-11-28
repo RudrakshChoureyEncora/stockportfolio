@@ -23,14 +23,14 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem("token");
       const userData = localStorage.getItem("user");
       const tokenExpiry = localStorage.getItem("tokenExpiry");
-
+      const userStockData = localStorage.getItem("userStocks");
       if (token && userData && tokenExpiry) {
         // Check if token is expired
         if (Date.now() > parseInt(tokenExpiry)) {
           logout();
         } else {
           setUser(JSON.parse(userData));
-
+          setUserStocks(JSON.parse(userStockData));
           // Set auto-logout when token expires
           const timeUntilExpiry = parseInt(tokenExpiry) - Date.now();
           setTimeout(logout, timeUntilExpiry);
@@ -89,12 +89,24 @@ export const AuthProvider = ({ children }) => {
         const userData = response.data;
         const token = "mock_jwt_token_" + Date.now();
         const tokenExpiry = Date.now() + 30 * 60 * 1000; // 30 minutes
+        const userId = userData.userId;
+        const portfolioResponse = await axios.get(
+          `/api/user-portfolio/${userId}`
+        );
 
         // Store in localStorage
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem(
+          "userStocks",
+          JSON.stringify(portfolioResponse.data)
+        );
         localStorage.setItem("tokenExpiry", tokenExpiry.toString());
         setUser(userData);
+        console.log(userData);
+
+        setUserStocks(portfolioResponse.data);
+
         // Auto-logout after 30 min
         setTimeout(logout, 30 * 60 * 1000);
         return { success: true };
@@ -113,9 +125,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("tokenExpiry");
+    localStorage.removeItem("userStocks");
 
     // Clear state
     setUser(null);
+    setUserStocks(null);
 
     console.log("User logged out");
   };
@@ -146,6 +160,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
+    userStocks,
     login,
     logout,
     loading,
