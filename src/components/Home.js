@@ -8,33 +8,8 @@ import { useStock } from "../context/StockCon";
 const Home = () => {
   const { user } = useAuth();
   const { stocks, loading } = useStock();
-  const [loadingLocalParam, setloadingLocalParam] = useState(true);
   console.log(stocks);
-  // useEffect(() => {
-  //   const fetchStocks = async () => {
-  //     try {
-  //       const raw = stocks;
 
-  //       // Normalize property names
-  //       const formatted = raw.map((item) => ({
-  //         stockId: item.StockId,
-  //         companyName: item.CompanyName,
-  //         symbol: item.Symbol,
-  //         currentPrice: item.CurrentPrice,
-  //         history: item.history || [], // ensure array
-  //       }));
-
-  //       console.log("Stocks loaded:", formatted);
-  //       setStocks(formatted);
-  //     } catch (err) {
-  //       console.error("❌ Error loading stocks:", err);
-  //     } finally {
-  //       setloadingLocalParam(false);
-  //     }
-  //   };
-
-  //   fetchStocks();
-  // }, []);
   return (
     <div className="home">
       <h1 className="title">📈 Live Stock Market Dashboard</h1>

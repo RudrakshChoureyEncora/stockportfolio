@@ -10,6 +10,8 @@ import { StockProvider } from "./context/StockCon";
 import PortfolioTracker from "./PortfolioTracker";
 import { useEffect } from "react";
 import Home from "./components/Home";
+import StockDetails from "./components/stock/StockDetails";
+import OrderStock from "./components/dashboard/OrderStock";
 
 // Profile component (example of another protected route)
 const Profile = () => {
@@ -70,6 +72,7 @@ function App() {
                   {/* Public routes */}
                   <Route path="/" element={<Home />} />
                   <Route path="/login" element={<Login />} />
+                  <Route path="/stock/:stockId" element={<StockDetails />} />
                   <Route
                     path="/register"
                     element={
@@ -94,6 +97,14 @@ function App() {
                     element={
                       <ProtectedRoute>
                         <Profile />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/orderStock"
+                    element={
+                      <ProtectedRoute>
+                        <OrderStock />
                       </ProtectedRoute>
                     }
                   />
