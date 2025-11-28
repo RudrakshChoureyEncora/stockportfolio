@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import Home from "./components/Home";
 import StockDetails from "./components/stock/StockDetails";
 import OrderStock from "./components/dashboard/OrderStock";
+import News from "./News";
 
 // Profile component (example of another protected route)
 const Profile = () => {
@@ -72,6 +73,7 @@ function App() {
                   {/* Public routes */}
                   <Route path="/" element={<Home />} />
                   <Route path="/login" element={<Login />} />
+                  <Route path="/news" element={<News />} />
                   <Route path="/stock/:stockId" element={<StockDetails />} />
                   <Route
                     path="/register"

@@ -36,7 +36,7 @@ const StockDetails = () => {
   };
 
   const handleAddToWatchlist = () => {
-    navigate(`/dashboard?watch=${stock.stockId}`);
+    // navigate(`/dashboard?watch=${stock.stockId}`);
     alert(`${stock.symbol} added to watchlist`);
   };
 

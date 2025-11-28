@@ -14,6 +14,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userStocks, setUserStocks] = useState(null);
 
   // Check for existing token on app start
   useEffect(() => {

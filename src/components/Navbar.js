@@ -14,13 +14,15 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="nav-brand">
-        <Link to="/">Stock Portfolio</Link>
+        <Link to="/">Stockify</Link>
       </div>
 
       <div className="nav-links">
         {user ? (
           <>
-            <Link to="/dashboard">Dashboard</Link>
+            <Link to="/">Home</Link>
+            <Link to="/dashboard">Portfolio</Link>
+            <Link to="/news">News</Link>
             <Link to="/profile">Profile</Link>
             {isTokenExpiringSoon() && (
               <span className="token-warning-badge"> </span>
@@ -32,6 +34,7 @@ const Navbar = () => {
         ) : (
           <>
             <Link to="/login">Login</Link>
+            <Link to="/news">News</Link>
             <Link to="/register">Register</Link>
           </>
         )}
