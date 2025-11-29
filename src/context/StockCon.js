@@ -98,147 +98,30 @@ export const StockProvider = ({ children }) => {
 
   const initializeDemoStocks = () => {
     const initialStocks = [
-      {
-        stockId: "RELIANCE",
-        name: "Reliance Industries",
-        symbol: "RELIANCE",
-        currentPrice: 2850.45,
-        history: [
-          { timeStamp: "2025-11-27T09:25:10Z", price: 2845.6 },
-          { timeStamp: "2025-11-27T09:25:20Z", price: 2848.2 },
-          { timeStamp: "2025-11-27T09:25:30Z", price: 2850.1 },
-          { timeStamp: "2025-11-27T09:25:40Z", price: 2850.45 },
-
-          // Added 28 more entries
-          { timeStamp: "2025-11-27T09:25:50Z", price: 2851.0 },
-          { timeStamp: "2025-11-27T09:26:00Z", price: 2850.7 },
-          { timeStamp: "2025-11-27T09:26:10Z", price: 2852.3 },
-          { timeStamp: "2025-11-27T09:26:20Z", price: 2853.0 },
-          { timeStamp: "2025-11-27T09:26:30Z", price: 2852.6 },
-          { timeStamp: "2025-11-27T09:26:40Z", price: 2853.4 },
-          { timeStamp: "2025-11-27T09:26:50Z", price: 2854.1 },
-          { timeStamp: "2025-11-27T09:27:00Z", price: 2855.2 },
-          { timeStamp: "2025-11-27T09:27:10Z", price: 2854.7 },
-          { timeStamp: "2025-11-27T09:27:20Z", price: 2853.9 },
-          { timeStamp: "2025-11-27T09:27:30Z", price: 2854.3 },
-          { timeStamp: "2025-11-27T09:27:40Z", price: 2854.9 },
-          { timeStamp: "2025-11-27T09:27:50Z", price: 2855.5 },
-          { timeStamp: "2025-11-27T09:28:00Z", price: 2856.0 },
-          { timeStamp: "2025-11-27T09:28:10Z", price: 2856.3 },
-          { timeStamp: "2025-11-27T09:28:20Z", price: 2855.8 },
-          { timeStamp: "2025-11-27T09:28:30Z", price: 2855.2 },
-          { timeStamp: "2025-11-27T09:28:40Z", price: 2856.1 },
-          { timeStamp: "2025-11-27T09:28:50Z", price: 2857.0 },
-          { timeStamp: "2025-11-27T09:29:00Z", price: 2857.4 },
-          { timeStamp: "2025-11-27T09:29:10Z", price: 2858.2 },
-          { timeStamp: "2025-11-27T09:29:20Z", price: 2857.9 },
-          { timeStamp: "2025-11-27T09:29:30Z", price: 2858.7 },
-          { timeStamp: "2025-11-27T09:29:40Z", price: 2859.3 },
-          { timeStamp: "2025-11-27T09:29:50Z", price: 2858.8 },
-          { timeStamp: "2025-11-27T09:30:00Z", price: 2859.5 },
-          { timeStamp: "2025-11-27T09:30:10Z", price: 2860.1 },
-          { timeStamp: "2025-11-27T09:30:20Z", price: 2860.4 },
-          { timeStamp: "2025-11-27T09:30:30Z", price: 2861.0 },
-          { timeStamp: "2025-11-27T09:30:40Z", price: 2861.3 },
-        ],
-      },
-
-      {
-        stockId: "TCS2",
-        name: "Tata Consultancy Services",
-        symbol: "TCS2",
-        currentPrice: 3650.2,
-        history: [
-          {
-            timeStamp: "2025-11-27T09:25:10Z",
-            price: 3645.8,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:20Z",
-            price: 3648.3,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:30Z",
-            price: 3650.0,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:40Z",
-            price: 3650.2,
-          },
-        ],
-      },
-      {
-        stockId: "HDFCBANK",
-        name: "HDFC Bank",
-        symbol: "HDFCBANK",
-        currentPrice: 1580.6,
-        history: [
-          {
-            timeStamp: "2025-11-27T09:25:10Z",
-            price: 1578.2,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:20Z",
-            price: 1579.4,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:30Z",
-            price: 1580.1,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:40Z",
-            price: 1580.6,
-          },
-        ],
-      },
-      {
-        stockId: "INFY",
-        name: "Infosys",
-        symbol: "INFY",
-        currentPrice: 1420.35,
-        history: [
-          {
-            timeStamp: "2025-11-27T09:25:10Z",
-            price: 1418.7,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:20Z",
-            price: 1419.5,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:30Z",
-            price: 1420.1,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:40Z",
-            price: 1420.35,
-          },
-        ],
-      },
-      {
-        stockId: "BHARTIARTL",
-        name: "Bharti Airtel",
-        symbol: "BHARTIARTL",
-        currentPrice: 1320.75,
-        history: [
-          {
-            timeStamp: "2025-11-27T09:25:10Z",
-            price: 1318.5,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:20Z",
-            price: 1319.6,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:30Z",
-            price: 1320.4,
-          },
-          {
-            timeStamp: "2025-11-27T09:25:40Z",
-            price: 1320.75,
-          },
-        ],
-      },
+      // {
+      //   stockId: "TCS2",
+      //   name: "Tata Consultancy Services",
+      //   symbol: "TCS2",
+      //   currentPrice: 3650.2,
+      //   history: [
+      //     {
+      //       timeStamp: "2025-11-27T09:25:10Z",
+      //       price: 3645.8,
+      //     },
+      //     {
+      //       timeStamp: "2025-11-27T09:25:20Z",
+      //       price: 3648.3,
+      //     },
+      //     {
+      //       timeStamp: "2025-11-27T09:25:30Z",
+      //       price: 3650.0,
+      //     },
+      //     {
+      //       timeStamp: "2025-11-27T09:25:40Z",
+      //       price: 3650.2,
+      //     },
+      //   ],
+      // },
     ];
 
     dispatch({ type: "SET_STOCKS", payload: initialStocks });
@@ -252,33 +135,35 @@ export const StockProvider = ({ children }) => {
     initializeDemoStocks();
   }, []); // runs only ONCE
 
-  // // Fetch stocks on component mount
-  // useEffect(() => {
-  //   const fetchStocks = async () => {
-  //     try {
-  //       const response = await axios.get("http://localhost:8080/api/stocks");
-  //       dispatch({ type: "SET_STOCKS", payload: response.data });
-  //     } catch (error) {
-  //       console.error("Error fetching stocks:", error);
-  //     }
-  //   };
+  // Fetch stocks on component mount
+  useEffect(() => {
+    const fetchStocks = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/stocks");
+        dispatch({ type: "SET_STOCKS", payload: response.data });
+        // console.log("this is stocks getting from database:");
+        // console.log(response);
+      } catch (error) {
+        console.error("Error fetching stocks:", error);
+      }
+    };
 
-  //   // Fetch immediately when component mounts
-  //   fetchStocks();
+    // Fetch immediately when component mounts
+    fetchStocks();
 
-  //   // Set interval to fetch every 60 seconds
-  //   const intervalId = setInterval(fetchStocks, 6000);
+    // Set interval to fetch every 60 seconds
+    const intervalId = setInterval(fetchStocks, 6000);
 
-  //   // Clear interval on component unmount
-  //   return () => clearInterval(intervalId);
-  // }, []);
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
 
-  // // Save to localStorage when stocks change
-  // useEffect(() => {
-  //   if (state.stocks.length > 0) {
-  //     localStorage.setItem("portfolioStocks", JSON.stringify(state.stocks));
-  //   }
-  // }, [state.stocks]);
+  // Save to localStorage when stocks change
+  useEffect(() => {
+    if (state.stocks.length > 0) {
+      localStorage.setItem("portfolioStocks", JSON.stringify(state.stocks));
+    }
+  }, [state.stocks]);
   //---------------------------------------------------------------------------------------------------------------------------------------------
   const startPriceUpdates = (symbol, currentPrice) => {
     // Clear existing interval for this stock

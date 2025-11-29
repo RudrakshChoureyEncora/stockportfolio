@@ -1,22 +1,23 @@
 import React from "react";
 import { useStock } from "../../context/StockCon";
-
+import "../../styles/Stockcard.css";
 const StockCard = ({ stock }) => {
   const { stocks } = useStock();
-  const userStock = stocks.find((s) => s.stockId === stock.stockId);
+  console.log("this is stock card");
+  console.log(stocks);
   console.log(stock);
-  console.log(userStock);
+  const userStock = stocks.find((s) => s.StockId === stock.stockId);
   if (!userStock) {
     return <div>No holdings found for {stock.symbol}</div>;
   }
 
-  const currentPrice = userStock.currentPrice || 0;
-  const value = currentPrice * (stock.quantity || 0);
+  const CurrentPrice = userStock.CurrentPrice || 0;
+  const value = CurrentPrice * (stock.quantity || 0);
   const investedAmount = stock.investedAmount || 0;
 
   const dayChange =
     stock.history && stock.history.length > 1
-      ? ((currentPrice -
+      ? ((CurrentPrice -
           (stock.history[stock.history.length - 2]?.price || 0)) /
           (stock.history[stock.history.length - 2]?.price || 1)) *
         100
@@ -24,6 +25,10 @@ const StockCard = ({ stock }) => {
 
   const profitPercent =
     investedAmount > 0 ? ((value - investedAmount) / investedAmount) * 100 : 0;
+
+  const last10Prices = userStock.history
+    .slice(-10)
+    .map((point) => point.price || 0);
 
   return (
     <div className="stock-card">
@@ -35,9 +40,9 @@ const StockCard = ({ stock }) => {
       </div>
       <div className="stock-details">
         <div className="price-section">
-          <div className="current-price">${currentPrice.toFixed(2)}</div>
+          <div className="current-price">₹{CurrentPrice.toFixed(2)}</div>
           <div
-            className={`change ${profitPercent >= 0 ? "positive" : "negative"}`}
+            className={`change ₹{profitPercent >= 0 ? "positive" : "negative"}`}
           >
             {profitPercent >= 0 ? "↗" : "↘"}{" "}
             {Math.abs(profitPercent).toFixed(2)}%
@@ -47,39 +52,42 @@ const StockCard = ({ stock }) => {
           <span>{stock.quantity || 0} shares</span>
         </div>
         <div className="value-section">
-          <div className="stock-value">${value.toFixed(2)}</div>
+          <div className="stock-value">₹{value.toFixed(2)}</div>
           <div className="value-label">Total Value</div>
         </div>
         <div className="invested-section">
           <div className="invested-amount">
-            Invested: ${investedAmount.toFixed(2)}
+            Invested: ₹{investedAmount.toFixed(2)}
           </div>
           <div className="purchase-date">Purchased: {stock.purchaseDate}</div>
         </div>
       </div>
-      {userStock.history && userStock.history.length > 1 && (
+      {/* {userStock.history && userStock.history.length > 1 && (
         <div className="mini-chart">
-          {userStock.history.slice(-10).map((point, index) => {
-            const maxPrice = Math.max(
-              ...userStock.history.slice(-10).map((p) => p.price || 0)
-            );
-            const minPrice = Math.min(
-              ...userStock.history.slice(-10).map((p) => p.price || 0)
-            );
-            const height =
-              ((point.price - minPrice) / (maxPrice - minPrice)) * 30 || 0;
-
-            return (
-              <div
-                key={index}
-                className="chart-bar"
-                style={{ height: `${height}px` }}
-                title={`$${(point.price || 0).toFixed(2)}`}
-              />
-            );
-          })}
+          <svg
+            className="line-chart"
+            viewBox="0 0 100 20"
+            preserveAspectRatio="none"
+          >
+            <polyline
+              fill="none"
+              stroke="#38bdf8"
+              strokeWidth="2"
+              points={last10Prices
+                .map((price, index) => {
+                  const x = (index / (last10Prices.length - 1)) * 100;
+                  const y =
+                    20 -
+                    ((price - Math.min(...last10Prices)) /
+                      (Math.max(...last10Prices) - Math.min(...last10Prices))) *
+                      20;
+                  return `₹{x},₹{y}`;
+                })
+                .join(" ")}
+            />
+          </svg>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

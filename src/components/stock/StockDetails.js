@@ -5,38 +5,40 @@ import StockHistoryChart from "../../components/dashboard/StockHistoryChart";
 import "../../styles/StockDetails.css";
 
 const StockDetails = () => {
-  const { stockId } = useParams();
+  const { StockId } = useParams();
   const navigate = useNavigate();
-  const { stocks, addToWatchlist } = useStock();
-  const stock = stocks.find((s) => s.stockId === stockId);
-
+  const { stocks } = useStock();
+  const stock = stocks.find((s) => s.StockId === StockId);
+  console.log("this is in stockdetail");
+  console.log(stocks);
+  console.log();
   if (!stock) {
     return <p>Stock not found</p>;
   }
 
   const history = stock.history || [];
   const initialPrice =
-    history.length > 0 ? history[0].price : stock.currentPrice;
-  const priceChange = stock.currentPrice - initialPrice;
+    history.length > 0 ? history[0].price : stock.CurrentPrice;
+  const priceChange = stock.CurrentPrice - initialPrice;
   const percentChange =
     history.length > 0 ? ((priceChange / initialPrice) * 100).toFixed(2) : 0;
   const dayChange =
     history.length > 1
-      ? ((stock.currentPrice - history[history.length - 2]?.price) /
+      ? ((stock.CurrentPrice - history[history.length - 2]?.price) /
           history[history.length - 2]?.price) *
         100
       : 0;
 
   const handleBuy = () => {
-    navigate(`/orderStock?watch=${stock.stockId}&action=buy`);
+    navigate(`/orderStock?watch=${stock.StockId}&action=buy`);
   };
 
   const handleSell = () => {
-    navigate(`/orderStock?watch=${stock.stockId}&action=sell`);
+    navigate(`/orderStock?watch=${stock.StockId}&action=sell`);
   };
 
   const handleAddToWatchlist = () => {
-    // navigate(`/dashboard?watch=${stock.stockId}`);
+    // navigate(`/dashboard?watch=${stock.StockId}`);
     alert(`${stock.symbol} added to watchlist`);
   };
 
@@ -69,10 +71,10 @@ const StockDetails = () => {
         {stock.name} ({stock.symbol})
       </h2>
       <p>
-        <strong>Stock ID:</strong> {stock.stockId}
+        <strong>Stock ID:</strong> {stock.StockId}
       </p>
       <p>
-        <strong>Current Price:</strong> ₹{stock.currentPrice}
+        <strong>Current Price:</strong> ₹{stock.CurrentPrice}
       </p>
       <p>
         <strong>Initial Price:</strong> ₹{initialPrice}

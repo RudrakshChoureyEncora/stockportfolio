@@ -1,31 +1,23 @@
 // src/components/PortfolioSummary.js
 import React from "react";
 import { useStock } from "../../context/StockCon";
+import { useAuth } from "../../context/AuthContext";
+import { calculatePortfolioSummary } from "../../services/PortfolioCalculator";
+import "../../styles/PortfolioSummary.css";
+
 const PortfolioSummary = () => {
-  const { stocks, getPortfolioValue, getTotalInvested, getPortfolioReturn } =
-    useStock();
-  const portfolioValue = getPortfolioValue();
-  const totalInvested = getTotalInvested();
-  const portfolioReturn = getPortfolioReturn();
-  const absoluteReturn = portfolioValue - totalInvested;
-  const topPerformer =
-    stocks.length > 0
-      ? stocks.reduce(
-          (top, stock) => {
-            const stockReturn =
-              stock.history && stock.history.length > 1
-                ? ((stock.price - stock.history[0].price) /
-                    stock.history[0].price) *
-                  100
-                : 0;
-            return stockReturn > top.return
-              ? { symbol: stock.symbol, return: stockReturn }
-              : top;
-          },
-          { symbol: "", return: -Infinity }
-        )
-      : null;
-  if (stocks.length === 0) {
+  const { userStocks } = useAuth();
+  const { stocks } = useStock();
+  const {
+    totalValue,
+    totalInvested,
+    absoluteReturn,
+    totalReturn,
+    stocksCount,
+    topPerformer,
+  } = calculatePortfolioSummary(userStocks, stocks);
+
+  if (userStocks.length === 0) {
     return (
       <div className="portfolio-summary empty">
         <h2>Portfolio Summary</h2>
@@ -33,6 +25,7 @@ const PortfolioSummary = () => {
       </div>
     );
   }
+
   return (
     <div className="portfolio-summary">
       <div className="summary-header">
@@ -41,7 +34,7 @@ const PortfolioSummary = () => {
       <div className="summary-grid">
         <div className="summary-card total-value">
           <h3>Total Value</h3>
-          <div className="amount">${portfolioValue.toFixed(2)}</div>
+          <div className="amount">${totalValue.toFixed(2)}</div>
           <div className="label">Current Portfolio Value</div>
         </div>
         <div className="summary-card total-invested">
@@ -59,13 +52,13 @@ const PortfolioSummary = () => {
             {absoluteReturn >= 0 ? "+" : ""}${absoluteReturn.toFixed(2)}
           </div>
           <div className="percentage">
-            ({portfolioReturn >= 0 ? "+" : ""}
-            {portfolioReturn.toFixed(2)}%)
+            ({totalReturn >= 0 ? "+" : ""}
+            {totalReturn.toFixed(2)}%)
           </div>
         </div>
         <div className="summary-card stocks-count">
           <h3>Stocks Held</h3>
-          <div className="amount">{stocks.length}</div>
+          <div className="amount">{stocksCount}</div>
           <div className="label">Different Stocks</div>
         </div>
       </div>
@@ -86,4 +79,5 @@ const PortfolioSummary = () => {
     </div>
   );
 };
+
 export default PortfolioSummary;

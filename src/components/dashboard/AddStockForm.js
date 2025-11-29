@@ -1,6 +1,7 @@
 // src/components/AddStockForm.js
 import React, { useState } from "react";
 import { useStock } from "../../context/StockCon";
+import { Navigate } from "react-router-dom";
 const AddStockForm = () => {
   const { addStock, stocks } = useStock();
   const [formData, setFormData] = useState({
@@ -39,7 +40,7 @@ const AddStockForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      addStock(formData.symbol, formData.name, formData.shares, formData.price);
+      Navigate(`/orderStock`);
       setFormData({ symbol: "", name: "", shares: "", price: "" });
       setErrors({});
     }

@@ -1,130 +1,138 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useStock } from "../../context/StockCon";
 import { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
+import "../../styles/OrderStock.css";
 
 export default function OrderStock() {
   const { stocks } = useStock();
-
+  const { user, orderAction } = useAuth();
   const { search } = useLocation();
   const params = new URLSearchParams(search);
 
   const defaultStockId = params.get("watch");
   const defaultAction = params.get("action") || "buy";
 
-  // Form States
   const [selectedStockId, setSelectedStockId] = useState(defaultStockId);
   const [action, setAction] = useState(defaultAction);
   const [quantity, setQuantity] = useState(1);
-  const [price, setPrice] = useState("");
+
   const [useCurrentPrice, setUseCurrentPrice] = useState(false);
 
-  // Find selected stock data
-  const selectedStock = stocks.find((s) => s.stockId === selectedStockId);
+  const selectedStock = stocks.find((s) => s.StockId === selectedStockId);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [price, setPrice] = useState(selectedStock.CurrentPrice);
 
-  // Update price when "use current price" toggles OR stock changes
   useEffect(() => {
-    if (useCurrentPrice && selectedStock) {
-      setPrice(selectedStock.currentPrice);
+    if (useCurrentPrice) {
+      setPrice(selectedStock.CurrentPrice);
     }
-  }, [useCurrentPrice, selectedStock]);
+  }, [useCurrentPrice]);
 
-  const handleSubmit = (e) => {
+  // Calculate total value
+  const totalValue = quantity * price;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const quantityToSend = action === "sell" ? -quantity : quantity;
 
-    console.log("Order placed:", {
+    const result = await orderAction(
+      user.userId,
       selectedStockId,
-      action,
-      quantity,
-      price,
-    });
+      parseInt(quantityToSend),
+      parseFloat(price)
+    );
 
-    alert("Order Submitted!");
+    if (result.success) {
+      const from = location.state?.from?.pathname || "/dashboard";
+      navigate(from, { replace: true });
+    } else {
+      const from = location.state?.from?.pathname || "/dashboard";
+      navigate(from, { replace: true });
+    }
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>
-        {action === "buy" ? "Buy" : "Sell"} {selectedStockId}
-      </h2>
+    <div className="order-stock">
+      <div className="order-stock-content">
+        <h2>
+          {action === "buy" ? "Buy" : "Sell"} {selectedStockId}
+        </h2>
 
-      {selectedStock && (
-        <div style={{ marginBottom: "20px" }}>
-          <strong>Stock Details:</strong>
-          <p>Name: {selectedStock.name}</p>
-          <p>Symbol: {selectedStock.symbol}</p>
-          <p>Current Price: ₹{selectedStock.currentPrice}</p>
-        </div>
-      )}
+        {selectedStock && (
+          <div className="stock-details">
+            <strong>Stock Details:</strong>
+            <p>Name: {selectedStock.name}</p>
+            <p>Symbol: {selectedStock.symbol}</p>
+            <p>Current Price: ₹{selectedStock.CurrentPrice}</p>
+            <p>Quantity: {quantity}</p>
+            <p>Total Value: ₹{totalValue.toFixed(2)}</p>
+          </div>
+        )}
 
-      <form onSubmit={handleSubmit} style={{ display: "grid", gap: "12px" }}>
-        {/* Stock Selection - SINGLE DROPDOWN */}
-        <label>
-          Select Stock:
-          <select
-            value={selectedStockId}
-            onChange={(e) => {
-              setSelectedStockId(e.target.value);
-              setUseCurrentPrice(false); // reset price mode when switching stock
-              setPrice(""); // clear price to avoid mismatch
-            }}
-            style={{ width: "250px" }}
-          >
-            {stocks.map((s) => (
-              <option key={s.stockId} value={s.stockId}>
-                {s.stockId} — {s.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <form onSubmit={handleSubmit} className="order-form">
+          <label>
+            Select Stock:
+            <select
+              value={selectedStockId}
+              onChange={(e) => {
+                setSelectedStockId(e.target.value);
+                setUseCurrentPrice(false);
+                setPrice("");
+              }}
+            >
+              {stocks.map((s) => (
+                <option key={s.StockId} value={s.StockId}>
+                  {s.StockId} — {s.name}
+                </option>
+              ))}
+            </select>
+          </label>
 
-        {/* Action Select */}
-        <label>
-          Action:
-          <select value={action} onChange={(e) => setAction(e.target.value)}>
-            <option value="buy">Buy</option>
-            <option value="sell">Sell</option>
-          </select>
-        </label>
+          <label>
+            Action:
+            <select value={action} onChange={(e) => setAction(e.target.value)}>
+              <option value="buy">Buy</option>
+              <option value="sell">Sell</option>
+            </select>
+          </label>
 
-        {/* Quantity Input */}
-        <label>
-          Quantity:
-          <input
-            type="number"
-            min="1"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            style={{ width: "100px" }}
-          />
-        </label>
+          <label>
+            Quantity:
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+            />
+          </label>
 
-        {/* Price Input */}
-        <label>
-          Price:
-          <input
-            type="number"
-            value={price}
-            disabled={useCurrentPrice}
-            onChange={(e) => setPrice(e.target.value)}
-            style={{ width: "150px" }}
-          />
-        </label>
+          <label>
+            Price:
+            <input
+              type="number"
+              value={price}
+              // disabled={useCurrentPrice}
+              onChange={(e) => setPrice(e.target.value)}
+            />
+          </label>
 
-        {/* Checkbox: Use Current Price */}
-        <label>
-          <input
-            type="checkbox"
-            checked={useCurrentPrice}
-            onChange={(e) => setUseCurrentPrice(e.target.checked)}
-          />
-          Use Current Price (₹{selectedStock?.currentPrice})
-        </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={useCurrentPrice}
+              onChange={(e) => setUseCurrentPrice(e.target.checked)}
+            />
+            Use Current Price (₹{selectedStock?.CurrentPrice})
+          </label>
 
-        {/* Submit Button */}
-        <button type="submit" style={{ width: "150px", marginTop: "10px" }}>
-          Submit Order
+          <button type="submit">Submit Order</button>
+        </form>
+        <button onClick={() => navigate(-1)} className="back-button">
+          ← Back
         </button>
-      </form>
+      </div>
     </div>
   );
 }

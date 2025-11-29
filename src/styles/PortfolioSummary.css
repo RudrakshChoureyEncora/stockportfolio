@@ -1,0 +1,86 @@
+.portfolio-summary {
+  background: #1e293b;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #f5f5f7;
+  max-width: 900px;
+  margin: 20px auto;
+  transition: transform 0.2s ease;
+}
+
+.portfolio-summary.empty {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.portfolio-summary.empty h2,
+.portfolio-summary.empty p {
+  color: #9ca3af;
+}
+
+.summary-header h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #e5f0ff;
+  margin-bottom: 16px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.summary-card {
+  background: #0f172a;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.summary-card h3 {
+  font-size: 1rem;
+  color: #9ca3af;
+  margin: 0 0 8px 0;
+}
+
+.summary-card .amount {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #e5f0ff;
+}
+
+.summary-card .label {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.returns.positive .amount,
+.returns.positive .percentage,
+.returns.positive .highlight-return {
+  color: #22c55e;
+}
+
+.returns.negative .amount,
+.returns.negative .percentage,
+.returns.negative .highlight-return {
+  color: #ef4444;
+}
+
+.performance-highlight {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #9ca3af;
+  margin-top: 16px;
+}
+
+.highlight-stock {
+  font-weight: 600;
+  color: #e5f0ff;
+}

@@ -7,7 +7,7 @@ import Step1pers from "../registration/Step1pers";
 import Step2Account from "../registration/Step2Account";
 import Step3InvestmentProfile from "../registration/Step3InvestmentProfile";
 import Step4PReview from "../registration/Step4PortfolioReview";
-import "./Register.css";
+import "../../styles/Register.css";
 
 export default function Register() {
   //   return <h1>this is register page form tag</h1>;WWWW

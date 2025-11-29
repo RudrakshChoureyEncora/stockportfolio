@@ -1,12 +1,12 @@
 // src/PortfolioTracker.js
 import React from "react";
-import PortfolioSummary from "./components/dashboard/PortfolioSummary";
-import AddStockForm from "./components/dashboard/AddStockForm";
-import StockCard from "./components/dashboard/StockCard";
-import PriceChart from "./components/dashboard/PriceChart";
-import "./PortfolioTracker.css";
-import { useStock } from "./context/StockCon";
-import { useAuth } from "./context/AuthContext";
+import PortfolioSummary from "./dashboard/PortfolioSummary";
+import AddStockForm from "./dashboard/AddStockForm";
+import StockCard from "./dashboard/StockCard";
+import PriceChart from "./dashboard/PriceChart";
+import "../styles/PortfolioT.css";
+import { useStock } from "../context/StockCon";
+import { useAuth } from "../context/AuthContext";
 const PortfolioTracker = () => {
   const { user, userStocks, logout, isTokenExpiringSoon } = useAuth();
   // const { stocks } = useStock();
@@ -18,10 +18,8 @@ const PortfolioTracker = () => {
   return (
     <div className="portfolio-tracker">
       <div className="portfolio-layout">
-        {/* <h1>{JSON.stringify(user)}</h1> */}
-
         <div className="main-content">
-          {/* <PortfolioSummary /> */}
+          <PortfolioSummary />
           <div className="stocks-section">
             <h2>Your Stocks ({userStocks.length})</h2>
             {userStocks.length === 0 ? (
@@ -32,16 +30,18 @@ const PortfolioTracker = () => {
               </div>
             ) : (
               <div className="stocks-grid">
-                {userStocks.map((stock) => (
-                  <StockCard key={stock.stockId} stock={stock} />
-                ))}
+                {userStocks
+                  .filter((stock) => stock.quantity > 0)
+                  .map((stock) => (
+                    <StockCard key={stock.stockId} stock={stock} />
+                  ))}
               </div>
             )}
           </div>
         </div>
         <div className="sidebar">
           {/* <AddStockForm /> */}
-          {/* <PriceChart /> */}
+          <PriceChart />
         </div>
       </div>
     </div>

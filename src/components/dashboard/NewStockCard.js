@@ -2,6 +2,7 @@
 import React, { useState, useMemo } from "react";
 import StockHistoryChart from "./StockHistoryChart";
 import { Link } from "react-router-dom";
+import "../../styles/NewStockCard.css";
 
 const NewStockCard = ({ stock }) => {
   const [range, setRange] = useState(10);
@@ -21,14 +22,14 @@ const NewStockCard = ({ stock }) => {
   }, [stock.history]);
 
   return (
-    <div className="stock-card">
-      <div className="stock-header">
+    <div className="newstock-card">
+      <div className="newstock-header">
         <h3>{stock.symbol}</h3>
         <p className="company">{stock.companyName}</p>
       </div>
 
-      <div className="stock-price">
-        <span className="price">₹{stock.currentPrice}</span>
+      <div className="newstock-price">
+        <span className="price">{stock.CurrentPrice}</span>
       </div>
 
       {/* Chart */}
@@ -47,7 +48,7 @@ const NewStockCard = ({ stock }) => {
         ))}
       </div>
 
-      <Link to={`/stock/${stock.stockId}`} className="details-button">
+      <Link to={`/stock/${stock.StockId}`} className="details-button">
         View Details →
       </Link>
     </div>

@@ -1,9 +1,11 @@
-// src/components/PriceChart.js
 import React, { useState } from "react";
 import { useStock } from "../../context/StockCon";
+import { useNavigate } from "react-router-dom";
+import "../../styles/Pricechart.css";
 const PriceChart = () => {
   const { stocks } = useStock();
   const [selectedStock, setSelectedStock] = useState(null);
+  const navigate = useNavigate();
   if (stocks.length === 0) {
     return (
       <div className="price-chart empty">
@@ -12,8 +14,10 @@ const PriceChart = () => {
       </div>
     );
   }
+
   const displayStock = selectedStock || stocks[0];
   const history = displayStock.history || [];
+
   if (history.length < 2) {
     return (
       <div className="price-chart">
@@ -27,7 +31,7 @@ const PriceChart = () => {
           >
             {stocks.map((stock) => (
               <option key={stock.symbol} value={stock.symbol}>
-                {stock.symbol}
+                {stock.symbol} - {stock.name}
               </option>
             ))}
           </select>
@@ -36,24 +40,36 @@ const PriceChart = () => {
       </div>
     );
   }
+  const handleBuy = () => {
+    navigate(`/orderStock?watch=${displayStock.StockId}&action=buy`);
+  };
+
+  const handleSell = () => {
+    navigate(`/orderStock?watch=${displayStock.StockId}&action=sell`);
+  };
+
   const prices = history.map((point) => point.price);
   const maxPrice = Math.max(...prices);
   const minPrice = Math.min(...prices);
   const chartHeight = 200;
   const chartWidth = 400;
+
   const getX = (index) => (index / (history.length - 1)) * chartWidth;
   const getY = (price) =>
     chartHeight - ((price - minPrice) / (maxPrice - minPrice)) * chartHeight;
+
   const pathData = history
     .map(
       (point, index) =>
         `${index === 0 ? "M" : "L"} ${getX(index)} ${getY(point.price)}`
     )
     .join(" ");
-  const currentPrice = displayStock.price;
+
+  const CurrentPrice = displayStock.CurrentPrice;
   const initialPrice = history[0].price;
-  const priceChange = currentPrice - initialPrice;
+  const priceChange = CurrentPrice - initialPrice;
   const percentChange = (priceChange / initialPrice) * 100;
+
   return (
     <div className="price-chart">
       <div className="chart-header">
@@ -64,7 +80,7 @@ const PriceChart = () => {
               priceChange >= 0 ? "positive" : "negative"
             }`}
           >
-            {priceChange >= 0 ? "↗" : "↘"} ${Math.abs(priceChange).toFixed(2)}(
+            {priceChange >= 0 ? "↗" : "↘"} ₹{Math.abs(priceChange).toFixed(2)} (
             {percentChange >= 0 ? "+" : ""}
             {percentChange.toFixed(2)}%)
           </div>
@@ -84,7 +100,6 @@ const PriceChart = () => {
       </div>
       <div className="chart-container">
         <svg width={chartWidth} height={chartHeight} className="chart-svg">
-          {/* Grid lines */}
           <line x1="0" y1="0" x2="0" y2={chartHeight} stroke="#e0e0e0" />
           <line
             x1="0"
@@ -93,11 +108,7 @@ const PriceChart = () => {
             y2={chartHeight}
             stroke="#e0e0e0"
           />
-
-          {/* Price path */}
           <path d={pathData} stroke="#007bff" strokeWidth="2" fill="none" />
-
-          {/* Start and end point*/}
           <circle
             cx={getX(0)}
             cy={getY(history[0].price)}
@@ -106,7 +117,7 @@ const PriceChart = () => {
           />
           <circle
             cx={getX(history.length - 1)}
-            cy={getY(currentPrice)}
+            cy={getY(CurrentPrice)}
             r="3"
             fill="#dc3545"
           />
@@ -115,20 +126,29 @@ const PriceChart = () => {
       <div className="chart-info">
         <div className="info-item">
           <span className="label">Current Price:</span>
-          <span className="value">${currentPrice.toFixed(2)}</span>
+          <span className="value">₹{CurrentPrice.toFixed(2)}</span>
         </div>
         <div className="info-item">
           <span className="label">Initial Price:</span>
-          <span className="value">${initialPrice.toFixed(2)}</span>
+          <span className="value">₹{initialPrice.toFixed(2)}</span>
         </div>
         <div className="info-item">
           <span className="label">Price Range:</span>
           <span className="value">
-            ${minPrice.toFixed(2)} - ${maxPrice.toFixed(2)}
+            ₹{minPrice.toFixed(2)} - ₹{maxPrice.toFixed(2)}
           </span>
         </div>
+      </div>
+      <div className="actions">
+        <button onClick={handleBuy} className="buy-button">
+          Buy
+        </button>
+        <button onClick={handleSell} className="sell-button">
+          Sell
+        </button>
       </div>
     </div>
   );
 };
+
 export default PriceChart;

@@ -16,19 +16,6 @@ const Step2Account = () => {
       </p>
 
       <div className="form-group">
-        <label htmlFor="userId">User ID *</label>
-        <input
-          id="userId"
-          type="text"
-          value={userId || ""}
-          onChange={(e) => handleChange("userId", e.target.value)}
-          className={errors.userId ? "error" : ""}
-          placeholder="Enter your user ID"
-        />
-        {errors.userId && <span className="error-text">{errors.userId}</span>}
-      </div>
-
-      <div className="form-group">
         <label htmlFor="email">Email *</label>
         <input
           id="email"

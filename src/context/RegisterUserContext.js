@@ -231,9 +231,6 @@ export const RUProvider = ({ children }) => {
         break;
 
       case 2: // Account Security
-        if (!state.userId?.trim()) {
-          errors.userId = "User ID is required";
-        }
         if (!state.email?.trim()) {
           errors.email = "Email is required";
         } else if (!/\S+@\S+\.\S+/.test(state.email)) {
@@ -294,9 +291,7 @@ export const RUProvider = ({ children }) => {
     }
 
     // Step 2: Account Security
-    if (!state.userId?.trim()) {
-      allErrors.userId = "User ID is required";
-    }
+
     if (!state.email?.trim()) {
       allErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(state.email)) {
@@ -333,12 +328,7 @@ export const RUProvider = ({ children }) => {
         allErrors.dateOfBirth
       ) {
         dispatch({ type: "SET_STEP", payload: 1 });
-      } else if (
-        allErrors.userId ||
-        allErrors.email ||
-        allErrors.username ||
-        allErrors.password
-      ) {
+      } else if (allErrors.email || allErrors.username || allErrors.password) {
         dispatch({ type: "SET_STEP", payload: 2 });
       } else {
         dispatch({ type: "SET_STEP", payload: 3 });

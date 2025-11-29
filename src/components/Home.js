@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import NewStockCard from "../components/dashboard/NewStockCard";
 import { useStock } from "../context/StockCon";
 
+import "../styles/Home.css";
+
 const Home = () => {
   const { user } = useAuth();
   const { stocks, loading } = useStock();
@@ -17,9 +19,9 @@ const Home = () => {
       {/* USER SECTION */}
       {user ? (
         <p className="user-info">
-          Logged in as <strong>{user.name}</strong>.{" "}
+          Logged in as <strong>{user.firstName + " " + user.lastName}</strong>.{" "}
           <Link to="/dashboard" className="nav-link">
-            Go to Dashboard →
+            Go to Portfolio →
           </Link>
         </p>
       ) : (
@@ -39,7 +41,7 @@ const Home = () => {
       ) : (
         <div className="stock-list">
           {stocks.map((stock) => (
-            <NewStockCard key={stock.stockId} stock={stock} />
+            <NewStockCard key={stock.StockId} stock={stock} />
           ))}
         </div>
       )}

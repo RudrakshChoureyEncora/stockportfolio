@@ -90,6 +90,7 @@ export const AuthProvider = ({ children }) => {
         const token = "mock_jwt_token_" + Date.now();
         const tokenExpiry = Date.now() + 30 * 60 * 1000; // 30 minutes
         const userId = userData.userId;
+
         const portfolioResponse = await axios.get(
           `/api/user-portfolio/${userId}`
         );
@@ -117,6 +118,56 @@ export const AuthProvider = ({ children }) => {
       return { success: false, error: "Login failed" };
     } finally {
       setLoading(false);
+    }
+  };
+
+  const orderAction = async (u, s, q, p) => {
+    try {
+      setLoading(true);
+      const orderData = {
+        userId: u, // Replace with dynamic value if needed
+        stockId: s,
+        quantity: q,
+        pricePerShare: p,
+        purchaseDate: new Date().toISOString().split("T")[0], // Today's date in YYYY-MM-DD format
+      };
+      console.log("this is in auth con");
+      console.log(orderData);
+      try {
+        const response = await axios.post("/api/portfolio/update", orderData);
+
+        if (response.status === 200) {
+          setLoading(false);
+          // alert("Order Submitted!");
+          console.log("Order placed:", orderData);
+          const portfolioResponse = await axios.get(`/api/user-portfolio/${u}`);
+
+          // Store in localStorage
+          localStorage.setItem(
+            "userStocks",
+            JSON.stringify(portfolioResponse.data)
+          );
+
+          setUserStocks(portfolioResponse.data);
+          return { success: true };
+        } else {
+          setLoading(false);
+          // alert("Failed to submit order. Please try again.");
+          console.error("API error:", response.data);
+          return { success: false };
+        }
+      } catch (error) {
+        setLoading(false);
+        // alert("Network error. Please check your connection.");
+        console.error("Network error:", error);
+        return { success: false };
+      }
+
+      //---------------------------------------------------------------------------------------------------------------------------------
+    } catch (error) {
+      setLoading(false);
+      return { success: false };
+    } finally {
     }
   };
 
@@ -166,6 +217,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     isTokenExpiringSoon,
     refreshToken,
+    orderAction,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

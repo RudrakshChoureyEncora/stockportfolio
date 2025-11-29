@@ -1,22 +1,23 @@
 // src/components/Login.js
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import "../../styles/Login.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { login, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Redirect if already logged in
   useEffect(() => {
     if (user) {
-      const from = location.state?.from?.pathname || "/dashboard";
+      const from = "/";
       navigate(from, { replace: true });
     }
   }, [user, navigate, location]);
@@ -57,14 +58,23 @@ const Login = () => {
 
           <div className="form-group">
             <label htmlFor="password">Password:</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={isLoading}
-            />
+            <div className="password-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={isLoading}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "hide" : "show"}
+              </button>
+            </div>
           </div>
 
           {error && <div className="error-message">{error}</div>}
@@ -73,18 +83,9 @@ const Login = () => {
             {isLoading ? "Logging in..." : "Login"}
           </button>
 
-          {/* <div className="demo-credentials">
-            <p>Demo Credentials:</p>
-            <button
-              type="button"
-              onClick={fillDemoCredentials}
-              className="demo-btn"
-            >
-              Fill Demo Credentials
-            </button>
-            <p>Email: user@example.com</p>
-            <p>Password: password</p>
-          </div> */}
+          <div className="register-link">
+            Don't have an account? <Link to="/register">Register</Link>
+          </div>
         </form>
       </div>
     </div>
