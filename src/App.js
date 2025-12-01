@@ -66,18 +66,18 @@ function App() {
                       </ProtectedRoute>
                     }
                   />
-                  {/* Admin route example (role-based)
-                <Route
-                  path="/admin"
-                  element={
-                    <ProtectedRoute requiredRole="admin">
-                      <div className="admin-panel">
-                        <h1>Admin Panel</h1>
-                        <p>This is only accessible to admins.</p>
-                      </div>
-                    </ProtectedRoute>
-                  }   
-                /> */}
+                  {/* Admin route example (role-based) */}
+                  <Route
+                    path="/admin"
+                    element={
+                      <ProtectedRoute requiredRole="AddStocks">
+                        <div className="admin-panel">
+                          <h1>Admin Panel</h1>
+                          <p>This is only accessible to admins.</p>
+                        </div>
+                      </ProtectedRoute>
+                    }
+                  />
                   {/* Catch all route */}
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>

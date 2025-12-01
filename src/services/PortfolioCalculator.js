@@ -31,7 +31,7 @@ export const calculatePortfolioSummary = (userStocks, stocks) => {
   const totalReturn =
     totalInvested > 0 ? (absoluteReturn / totalInvested) * 100 : 0;
 
-  const stocksCount = userStocks.length;
+  const stocksCount = userStocks.filter((stock) => stock.quantity > 0).length;
 
   const topPerformer = userStocks.reduce(
     (top, userStock) => {

@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Mock login function - replace with actual API call
-  const login = async (email, password) => {
+  const login = async (email, password, role) => {
     try {
       setLoading(true);
 
@@ -131,8 +131,8 @@ export const AuthProvider = ({ children }) => {
         pricePerShare: p,
         purchaseDate: new Date().toISOString().split("T")[0], // Today's date in YYYY-MM-DD format
       };
-      console.log("this is in auth con");
-      console.log(orderData);
+      // console.log("this is in auth con");
+      // console.log(orderData);
       try {
         const response = await axios.post("/api/portfolio/update", orderData);
 

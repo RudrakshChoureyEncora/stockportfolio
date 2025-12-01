@@ -1,14 +1,13 @@
 // src/PortfolioTracker.js
 import React from "react";
 import PortfolioSummary from "./dashboard/PortfolioSummary";
-import AddStockForm from "./dashboard/AddStockForm";
+
 import StockCard from "./dashboard/StockCard";
 import PriceChart from "./dashboard/PriceChart";
 import "../styles/PortfolioT.css";
-import { useStock } from "../context/StockCon";
 import { useAuth } from "../context/AuthContext";
 const PortfolioTracker = () => {
-  const { user, userStocks, logout, isTokenExpiringSoon } = useAuth();
+  const { userStocks } = useAuth();
   // const { stocks } = useStock();
   // console.log("this are user Stocks");
   // console.log(user);
@@ -21,7 +20,10 @@ const PortfolioTracker = () => {
         <div className="main-content">
           <PortfolioSummary />
           <div className="stocks-section">
-            <h2>Your Stocks ({userStocks.length})</h2>
+            <h2>
+              Your Stocks (
+              {userStocks.filter((stock) => stock.quantity > 0).length})
+            </h2>
             {userStocks.length === 0 ? (
               <div className="empty-portfolio">
                 <div className="empty-icon"> </div>
