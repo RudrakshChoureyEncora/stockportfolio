@@ -23,14 +23,24 @@ export const calculatePortfolioSummary = (userStocks, stocks) => {
     return sum;
   }, 0);
 
-  const totalInvested = userStocks.reduce((sum, userStock) => {
+  const totalInvestedToCalc = userStocks.reduce((sum, userStock) => {
     return sum + (userStock.investedAmount || 0);
   }, 0);
 
-  const absoluteReturn = totalValue - totalInvested;
-  const totalReturn =
-    totalInvested > 0 ? (absoluteReturn / totalInvested) * 100 : 0;
+  const totalInvested = userStocks
+    .filter((stock) => stock.quantity > 0)
+    .reduce((sum, stock) => sum + (stock.investedAmount || 0), 0);
 
+  const absoluteReturn = totalValue - totalInvestedToCalc;
+  console.log("this is in calc");
+  console.log(totalInvestedToCalc);
+  console.log(absoluteReturn);
+  // Update totalReturn to use totalInvestedToCalc for denominator
+  const totalReturn =
+    Math.abs(totalInvestedToCalc) > 0
+      ? (absoluteReturn / Math.abs(totalInvestedToCalc)) * 100
+      : 0;
+  console.log(totalReturn);
   const stocksCount = userStocks.filter((stock) => stock.quantity > 0).length;
 
   const topPerformer = userStocks.reduce(

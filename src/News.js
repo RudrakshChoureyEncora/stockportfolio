@@ -11,7 +11,7 @@ export default function News() {
       try {
         // Using the free NewsAPI (requires free API key)
         const response = await fetch(
-          "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=your api key"
+          "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=844839d9cd794f3f829f23b66c3d3c83"
         );
         const data = await response.json();
 

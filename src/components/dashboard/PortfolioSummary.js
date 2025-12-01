@@ -35,12 +35,12 @@ const PortfolioSummary = () => {
         <div className="summary-card total-value">
           <h3>Total Value</h3>
           <div className="amount">${totalValue.toFixed(2)}</div>
-          <div className="label">Current Portfolio Value</div>
+          <div className="label">Current Portfolio Value Currently</div>
         </div>
         <div className="summary-card total-invested">
-          <h3>Total Invested</h3>
+          <h3>Total Invested Currently</h3>
           <div className="amount">${totalInvested.toFixed(2)}</div>
-          <div className="label">Total Amount Invested</div>
+          <div className="label">Total Amount Invested Currently</div>
         </div>
         <div
           className={`summary-card returns ${
@@ -57,7 +57,7 @@ const PortfolioSummary = () => {
           </div>
         </div>
         <div className="summary-card stocks-count">
-          <h3>Stocks Held</h3>
+          <h3>Stocks Held Currently</h3>
           <div className="amount">{stocksCount}</div>
           <div className="label">Different Stocks</div>
         </div>
