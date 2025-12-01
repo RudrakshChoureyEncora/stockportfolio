@@ -96,6 +96,12 @@
   border-radius: 2px;
 }
 
+.stock-detail-layout {
+  display: grid;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
 .actions {
   display: flex;
   gap: 12px;

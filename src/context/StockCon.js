@@ -126,9 +126,9 @@ export const StockProvider = ({ children }) => {
 
     dispatch({ type: "SET_STOCKS", payload: initialStocks });
 
-    initialStocks.forEach((stock) => {
-      // startPriceUpdates(stock.symbol, stock.price);
-    });
+    // initialStocks.forEach((stock) => {
+    //   // startPriceUpdates(stock.symbol, stock.price);
+    // });
   };
 
   useEffect(() => {
@@ -182,44 +182,78 @@ export const StockProvider = ({ children }) => {
   };
 
   // -----------------------------------------------------------------------------------------------------------------------------------
-  const addStock = (symbol, name, shares, price = 100) => {
-    const newStock = {
-      symbol: symbol.toUpperCase(),
-      name,
-      price: parseFloat(price),
-      shares: parseInt(shares),
-      history: [],
-    };
-    dispatch({ type: "ADD_STOCK", payload: newStock });
-    startPriceUpdates(symbol.toUpperCase(), price);
-  };
+  const addStock = async (symbol, companyName, currentPrice) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/admin/stocks/add",
+        {
+          companyName,
+          currentPrice,
+          symbol,
+        }
+      );
 
-  // ------------------------------------------------------------------------------------------------------------------------------------
-  const removeStock = (symbol) => {
-    dispatch({ type: "REMOVE_STOCK", payload: symbol });
-    if (intervals.current[symbol]) {
-      clearInterval(intervals.current[symbol]);
-      delete intervals.current[symbol];
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (error) {
+      console.error("Error adding stock:", error);
+
+      return {
+        success: false,
+        error: error.response?.data || error.message,
+      };
     }
   };
 
   // ------------------------------------------------------------------------------------------------------------------------------------
-  const updateShares = (symbol, shares) => {
-    if (shares > 0) {
-      dispatch({
-        type: "UPDATE_SHARES",
-        payload: { symbol, shares: parseInt(shares) },
+
+  const removeStock = async (stockId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/api/admin/deleteStock/${stockId}`
+      );
+
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (error) {
+      console.error("Error deleting stock:", error);
+
+      return {
+        success: false,
+        error: error.response?.data || error.message,
+      };
+    }
+  };
+  // ------------------------------------------------------------------------------------------------------------------------------------
+  const updateStock = async (stock) => {
+    try {
+      const response = await fetch("/admin/stocks/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(stock),
       });
+
+      if (response.ok) {
+        console.log("Stock updated");
+        console.log(stock);
+        return { success: true };
+      } else {
+        console.error("Failed to update stock");
+        return { success: false, error: "Failed to update stock" };
+      }
+    } catch (error) {
+      console.error("Error updating stock:", error);
+      return { success: false, error: "Network error" };
     }
   };
 
   // ------------------------------------------------------------------------------------------------------------------------------------
-  const clearPortfolio = () => {
-    Object.values(intervals.current).forEach(clearInterval);
-    intervals.current = {};
-    dispatch({ type: "SET_STOCKS", payload: [] });
-    localStorage.removeItem("portfolioStocks");
-  };
 
   // ------------------------------------------------------------------------------------------------------------------------------------
   // Calculate portfolio statistics
@@ -256,10 +290,9 @@ export const StockProvider = ({ children }) => {
     loading: state.loading,
 
     // Actions
-    // addStock,
-    // removeStock,
-    // updateShares,
-    // clearPortfolio,
+    addStock,
+    removeStock,
+    updateStock,
 
     // Computed values
     // getPortfolioValue,

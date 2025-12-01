@@ -16,7 +16,7 @@ export default function News() {
         const data = await response.json();
 
         if (data.articles) {
-          setNews(data.articles.slice(0, 10)); // Display first 10 articles
+          setNews(data.articles.slice(0, 100)); // Display first 10 articles
         } else {
           setError("No articles found.");
         }

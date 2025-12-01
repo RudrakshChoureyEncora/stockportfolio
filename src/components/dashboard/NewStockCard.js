@@ -6,8 +6,8 @@ import "../../styles/NewStockCard.css";
 
 const NewStockCard = ({ stock }) => {
   const [range, setRange] = useState(10);
-  console.log("Stock data:", stock);
-  console.log("History data:", stock.history);
+  // console.log("Stock data:", stock);
+  // console.log("History data:", stock.history);
 
   // Normalize history so chart doesn't break
   const safeHistory = useMemo(() => {

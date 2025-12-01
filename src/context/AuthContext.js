@@ -31,6 +31,13 @@ export const AuthProvider = ({ children }) => {
         } else {
           setUser(JSON.parse(userData));
           setUserStocks(JSON.parse(userStockData));
+          axios.interceptors.request.use((config) => {
+            const token = localStorage.getItem("token");
+            if (token) {
+              config.headers.Authorization = `Bearer ${token}`;
+            }
+            return config;
+          });
           // Set auto-logout when token expires
           const timeUntilExpiry = parseInt(tokenExpiry) - Date.now();
           setTimeout(logout, timeUntilExpiry);
@@ -50,35 +57,6 @@ export const AuthProvider = ({ children }) => {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Mock validation
-
-      // if (email === "user@example.com" && password === "password") {
-      //   const userData = {
-      //     id: 1,
-      //     email: email,
-      //     name: "John Doe",
-      //     role: "user",
-      //   };
-
-      //
-      //   const token = "mock_jwt_token_" + Date.now();
-      //   const tokenExpiry = Date.now() + 30 * 60 * 1000; // 30 minutes
-
-      //   // Store in localStorage
-      //   localStorage.setItem("token", token);
-      //   localStorage.setItem("user", JSON.stringify(userData));
-      //   localStorage.setItem("tokenExpiry", tokenExpiry.toString());
-
-      //   setUser(userData);
-
-      //   // Set auto-logout
-      //   setTimeout(logout, 30 * 60 * 1000);
-
-      //   return { success: true };
-      // } else {
-      //   return { success: false, error: "Invalid credentials" };
-      // }
-
       const response = await axios.post("/api/login", {
         email: email,
         password: password,
@@ -86,18 +64,25 @@ export const AuthProvider = ({ children }) => {
       console.log(response);
       // If API returned success and user exists
       if (response.status === 200) {
-        const userData = response.data;
-        const token = "mock_jwt_token_" + Date.now();
+        const userData = response.data.user;
+        const token = response.data.token;
         const tokenExpiry = Date.now() + 30 * 60 * 1000; // 30 minutes
         const userId = userData.userId;
-
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(userData));
+        axios.interceptors.request.use((config) => {
+          const token = localStorage.getItem("token");
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
+          return config;
+        });
         const portfolioResponse = await axios.get(
           `/api/user-portfolio/${userId}`
         );
 
         // Store in localStorage
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(userData));
+
         localStorage.setItem(
           "userStocks",
           JSON.stringify(portfolioResponse.data)
@@ -209,6 +194,45 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const getAllUsers = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/api/admin/allUsers"
+      );
+      console.log("API Response:", response.data); // debug
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (error) {
+      console.error("Error deleting stock:", error);
+
+      return {
+        success: false,
+        error: error.response?.data || error.message,
+      };
+    }
+  };
+
+  // Delete a user by ID
+  const deleteUser = async (userId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/api/admin/deleteUser/${userId}`
+      );
+      console.log(response);
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data || error.message,
+      };
+    }
+  };
+
   const value = {
     user,
     userStocks,
@@ -218,6 +242,8 @@ export const AuthProvider = ({ children }) => {
     isTokenExpiringSoon,
     refreshToken,
     orderAction,
+    getAllUsers,
+    deleteUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

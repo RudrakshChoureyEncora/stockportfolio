@@ -20,16 +20,34 @@ const Navbar = () => {
       <div className="nav-links">
         {user ? (
           <>
-            <Link to="/">Home</Link>
-            <Link to="/dashboard">Portfolio</Link>
-            <Link to="/news">News</Link>
-            <Link to="/profile">Profile</Link>
-            {isTokenExpiringSoon() && (
-              <span className="token-warning-badge"> </span>
+            {user.role === "USER" ? (
+              <>
+                <Link to="/">Home</Link>
+                <Link to="/dashboard">Portfolio</Link>
+                <Link to="/news">News</Link>
+                <Link to="/profile">Profile</Link>
+                {isTokenExpiringSoon() && (
+                  <span className="token-warning-badge"> </span>
+                )}
+                <button onClick={handleLogout} className="nav-logout-btn">
+                  Logout ({user.username})
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/">Home</Link>
+                <Link to="/manageStocks">Manage Stocks</Link>
+                <Link to="/manageUsers">Manage Users</Link>
+                <Link to="/news">News</Link>
+                <Link to="/profile">Profile</Link>
+                {isTokenExpiringSoon() && (
+                  <span className="token-warning-badge"> </span>
+                )}
+                <button onClick={handleLogout} className="nav-logout-btn">
+                  Logout ({user.username})
+                </button>
+              </>
             )}
-            <button onClick={handleLogout} className="nav-logout-btn">
-              Logout ({user.username})
-            </button>
           </>
         ) : (
           <>

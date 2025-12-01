@@ -1,17 +1,21 @@
 import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useStock } from "../../context/StockCon";
 import StockHistoryChart from "../../components/dashboard/StockHistoryChart";
 import "../../styles/StockDetails.css";
+import { useAuth } from "../../context/AuthContext";
+import ModifyStockForm from "../adminComponents/ModifyStockForm";
 
 const StockDetails = () => {
   const { StockId } = useParams();
   const navigate = useNavigate();
-  const { stocks } = useStock();
+  const { stocks, removeStock, updateStock } = useStock();
   const stock = stocks.find((s) => s.StockId === StockId);
-  console.log("this is in stockdetail");
-  console.log(stocks);
-  console.log();
+  const { user } = useAuth();
+  const [showModifyForm, setShowModifyForm] = useState(false);
+  // console.log("this is in stockdetail");
+  // console.log(stocks);
+  // console.log();
   if (!stock) {
     return <p>Stock not found</p>;
   }
@@ -37,12 +41,15 @@ const StockDetails = () => {
     navigate(`/orderStock?watch=${stock.StockId}&action=sell`);
   };
 
-  const handleAddToWatchlist = () => {
-    // navigate(`/dashboard?watch=${stock.StockId}`);
-    alert(`${stock.symbol} added to watchlist`);
-  };
+  // const handleAddToWatchlist = () => {
+  //   // navigate(`/dashboard?watch=${stock.StockId}`);
+  //   alert(`${stock.symbol} added to watchlist`);
+  // };
 
   // Generate candles for the last 10 points
+  const handleBackToAdd = () => {
+    setShowModifyForm(false);
+  };
   const generateCandles = (data) => {
     const candles = [];
     for (let i = 0; i < data.length; i += 2) {
@@ -60,98 +67,140 @@ const StockDetails = () => {
     return candles;
   };
 
+  const handleDelete = async (stockID) => {
+    const result = await removeStock(stockID);
+
+    if (result.success) {
+      console.log("Stock deleted successfully");
+    } else {
+      console.log("Delete failed:", result.error);
+    }
+  };
+
+  const handleModify = () => {
+    setShowModifyForm(true);
+  };
+
   const candles = generateCandles(history.slice(-10));
 
   return (
-    <div className="stock-details">
-      <button onClick={() => navigate(-1)} className="back-button">
-        ← Back
-      </button>
-      <h2>
-        {stock.name} ({stock.symbol})
-      </h2>
-      <p>
-        <strong>Stock ID:</strong> {stock.StockId}
-      </p>
-      <p>
-        <strong>Current Price:</strong> ₹{stock.CurrentPrice}
-      </p>
-      <p>
-        <strong>Initial Price:</strong> ₹{initialPrice}
-      </p>
-      <p>
-        <strong>Price Change:</strong> ₹{priceChange.toFixed(2)} (
-        {percentChange}% change)
-      </p>
-      <p>
-        <strong>Day Change:</strong> {dayChange >= 0 ? "↗" : "↘"}{" "}
-        {Math.abs(dayChange).toFixed(2)}%
-      </p>
-
-      <div className="stock-chart">
-        <StockHistoryChart history={history} range={60} />
-      </div>
-
-      <div className="candlestick-mini-chart">
-        {candles.map((candle, index) => (
-          <div key={index} className="candlestick">
-            <div
-              className="wick wick-top"
-              style={{
-                height: `${
-                  ((candle.high - Math.max(candle.open, candle.close)) /
-                    (candle.high - candle.low)) *
-                  20
-                }px`,
-                top: 0,
-              }}
-            ></div>
-            <div
-              className="body"
-              style={{
-                height: `${
-                  (Math.abs(candle.close - candle.open) /
-                    (candle.high - candle.low)) *
-                  20
-                }px`,
-                backgroundColor:
-                  candle.close >= candle.open ? "#28a745" : "#dc3545",
-                top: `${
-                  ((Math.min(candle.open, candle.close) - candle.low) /
-                    (candle.high - candle.low)) *
-                  20
-                }px`,
-              }}
-            ></div>
-            <div
-              className="wick wick-bottom"
-              style={{
-                height: `${
-                  ((Math.min(candle.open, candle.close) - candle.low) /
-                    (candle.high - candle.low)) *
-                  20
-                }px`,
-                top: `${
-                  (Math.abs(candle.close - candle.open) /
-                    (candle.high - candle.low)) *
-                  20
-                }px`,
-              }}
-            ></div>
-          </div>
-        ))}
-      </div>
-
-      <div className="actions">
-        <button onClick={handleBuy} className="buy-button">
-          Buy
+    <div className="stock-detail-layout">
+      <div className="stock-details">
+        <button onClick={() => navigate(-1)} className="back-button">
+          ← Back
         </button>
-        <button onClick={handleSell} className="sell-button">
-          Sell
-        </button>
-        <button onClick={handleAddToWatchlist} className="watchlist-button">
+        <h2>
+          {stock.name} ({stock.symbol})
+        </h2>
+        <p>
+          <strong>Stock ID:</strong> {stock.StockId}
+        </p>
+        <p>
+          <strong>Current Price:</strong> ₹{stock.CurrentPrice}
+        </p>
+        <p>
+          <strong>Initial Price:</strong> ₹{initialPrice}
+        </p>
+        <p>
+          <strong>Price Change:</strong> ₹{priceChange.toFixed(2)} (
+          {percentChange}% change)
+        </p>
+        <p>
+          <strong>Day Change:</strong> {dayChange >= 0 ? "↗" : "↘"}{" "}
+          {Math.abs(dayChange).toFixed(2)}%
+        </p>
+
+        <div className="stock-chart">
+          <StockHistoryChart history={history} range={60} />
+        </div>
+
+        <div className="candlestick-mini-chart">
+          {candles.map((candle, index) => (
+            <div key={index} className="candlestick">
+              <div
+                className="wick wick-top"
+                style={{
+                  height: `${
+                    ((candle.high - Math.max(candle.open, candle.close)) /
+                      (candle.high - candle.low)) *
+                    20
+                  }px`,
+                  top: 0,
+                }}
+              ></div>
+              <div
+                className="body"
+                style={{
+                  height: `${
+                    (Math.abs(candle.close - candle.open) /
+                      (candle.high - candle.low)) *
+                    20
+                  }px`,
+                  backgroundColor:
+                    candle.close >= candle.open ? "#28a745" : "#dc3545",
+                  top: `${
+                    ((Math.min(candle.open, candle.close) - candle.low) /
+                      (candle.high - candle.low)) *
+                    20
+                  }px`,
+                }}
+              ></div>
+              <div
+                className="wick wick-bottom"
+                style={{
+                  height: `${
+                    ((Math.min(candle.open, candle.close) - candle.low) /
+                      (candle.high - candle.low)) *
+                    20
+                  }px`,
+                  top: `${
+                    (Math.abs(candle.close - candle.open) /
+                      (candle.high - candle.low)) *
+                    20
+                  }px`,
+                }}
+              ></div>
+            </div>
+          ))}
+        </div>
+
+        <div className="actions">
+          {user && user.role === "ADMIN" ? (
+            <div className="for-admin">
+              <button
+                onClick={() => handleModify(stock)}
+                className="details-button"
+              >
+                Modify
+              </button>
+              <button
+                onClick={() => handleDelete(stock.StockId)}
+                className="details-button"
+              >
+                Delete
+              </button>
+            </div>
+          ) : (
+            <div className="for-open">
+              <button onClick={handleBuy} className="buy-button">
+                Buy
+              </button>
+              <button onClick={handleSell} className="sell-button">
+                Sell
+              </button>
+            </div>
+          )}
+          {/* <button onClick={handleAddToWatchlist} className="watchlist-button">
           Add to Watchlist
-        </button>
+        </button> */}
+        </div>
+      </div>
+      <div className="stocks-sidebar">
+        {showModifyForm ? (
+          <ModifyStockForm stock={stock} onBack={handleBackToAdd} />
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

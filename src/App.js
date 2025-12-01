@@ -13,6 +13,8 @@ import StockDetails from "./components/stock/StockDetails";
 import OrderStock from "./components/dashboard/OrderStock";
 import News from "./News";
 import Profile from "./components/Profile";
+import ManageStocks from "./components/adminComponents/ManageStocks";
+import ManageUser from "./components/adminComponents/ManageUser";
 
 // Profile component (example of another protected route)
 
@@ -68,13 +70,18 @@ function App() {
                   />
                   {/* Admin route example (role-based) */}
                   <Route
-                    path="/admin"
+                    path="/manageUsers"
                     element={
-                      <ProtectedRoute requiredRole="AddStocks">
-                        <div className="admin-panel">
-                          <h1>Admin Panel</h1>
-                          <p>This is only accessible to admins.</p>
-                        </div>
+                      <ProtectedRoute requiredRole="ADMIN">
+                        <ManageUser />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/manageStocks"
+                    element={
+                      <ProtectedRoute requiredRole="ADMIN">
+                        <ManageStocks />
                       </ProtectedRoute>
                     }
                   />

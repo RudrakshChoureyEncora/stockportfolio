@@ -10,7 +10,7 @@ import "../styles/Home.css";
 const Home = () => {
   const { user } = useAuth();
   const { stocks, loading } = useStock();
-  console.log(stocks);
+  // console.log(stocks);
 
   return (
     <div className="home">
