@@ -14,7 +14,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [userStocks, setUserStocks] = useState(null);
+  const [userStocks, setUserStocks] = useState();
 
   // Check for existing token on app start
   useEffect(() => {
@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }) => {
           return config;
         });
         const portfolioResponse = await axios.get(
-          `/api/user-portfolio/${userId}`
+          `http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/user-portfolio/${userId}`
         );
 
         // Store in localStorage
@@ -131,7 +131,9 @@ export const AuthProvider = ({ children }) => {
           setLoading(false);
           // alert("Order Submitted!");
           console.log("Order placed:", orderData);
-          const portfolioResponse = await axios.get(`/api/user-portfolio/${u}`);
+          const portfolioResponse = await axios.get(
+            `http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/user-portfolio/${u}`
+          );
 
           // Store in localStorage
           localStorage.setItem(
@@ -223,7 +225,9 @@ export const AuthProvider = ({ children }) => {
   // Delete a user by ID
   const deleteUser = async (emailId) => {
     try {
-      const response = await axios.delete(`/api/admin/deleteUser/${emailId}`);
+      const response = await axios.delete(
+        `http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/admin/deleteUser/${emailId}`
+      );
       console.log(response);
       return {
         success: true,

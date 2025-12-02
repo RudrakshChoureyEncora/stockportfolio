@@ -58,8 +58,8 @@ const AddStockForm = ({ existingStocks }) => {
     }
 
     const result = await addStock(
-      formData.companyName,
       formData.symbol,
+      formData.companyName,
       formData.currentPrice
     );
 

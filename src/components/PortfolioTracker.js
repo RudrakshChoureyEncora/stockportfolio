@@ -7,7 +7,10 @@ import PriceChart from "./dashboard/PriceChart";
 import "../styles/PortfolioT.css";
 import { useAuth } from "../context/AuthContext";
 const PortfolioTracker = () => {
-  const { userStocks } = useAuth();
+  const { user, userStocks } = useAuth();
+  console.log("this is getting rendered");
+  console.log(user);
+  console.log(userStocks);
   // const { stocks } = useStock();
   // console.log("this are user Stocks");
   // console.log(user);
@@ -22,7 +25,10 @@ const PortfolioTracker = () => {
           <div className="stocks-section">
             <h2>
               Your Stocks (
-              {userStocks.filter((stock) => stock.quantity > 0).length})
+              {/* {userStocks.filter((stock) => stock.quantity > 0).length} */}
+              {Array.isArray(userStocks) &&
+                userStocks.filter((stock) => stock.quantity > 0).length}
+              )
             </h2>
             {userStocks.length === 0 ? (
               <div className="empty-portfolio">
@@ -32,11 +38,17 @@ const PortfolioTracker = () => {
               </div>
             ) : (
               <div className="stocks-grid">
-                {userStocks
+                {/* {userStocks
                   .filter((stock) => stock.quantity > 0)
                   .map((stock) => (
                     <StockCard key={stock.stockId} stock={stock} />
-                  ))}
+                  ))} */}
+                {Array.isArray(userStocks) &&
+                  userStocks
+                    .filter((stock) => stock.quantity > 0)
+                    .map((stock) => (
+                      <StockCard key={stock.stockId} stock={stock} />
+                    ))}
               </div>
             )}
           </div>

@@ -7,6 +7,8 @@ import "../../styles/OrderStock.css";
 export default function OrderStock() {
   const { stocks } = useStock();
   const { user, orderAction, userStocks } = useAuth();
+  console.log("this is getting rendered");
+  console.log(userStocks);
   const { search } = useLocation();
   const params = new URLSearchParams(search);
 
@@ -33,13 +35,46 @@ export default function OrderStock() {
   // Calculate total value
   const totalValue = quantity * price;
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   console.log(userStocks);
+  //   const userHolding = userStocks.find((h) => h.stockId === selectedStockId);
+
+  //   // console.log("-------------------");
+  //   // console.log(userHolding);
+  //   const availableQuantity = userHolding?.quantity || 0;
+
+  //   // SELL VALIDATION
+  //   if (action === "sell" && quantity > availableQuantity) {
+  //     navigate("/output", {
+  //       state: {
+  //         success: false,
+  //         error: `You only have ${availableQuantity} shares. Cannot sell ${quantity}.`,
+  //       },
+  //     });
+  //     return;
+  //   }
+
+  //   const quantityToSend = action === "sell" ? -quantity : quantity;
+
+  //   const result = await orderAction(
+  //     user.userId,
+  //     selectedStockId,
+  //     parseInt(quantityToSend),
+  //     parseFloat(price)
+  //   );
+
+  //   navigate("/output", { state: result });
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(userStocks);
-    const userHolding = userStocks.find((h) => h.stockId === selectedStockId);
 
-    // console.log("-------------------");
-    // console.log(userHolding);
+    // Ensure userStocks is an array
+    const userHolding = Array.isArray(userStocks)
+      ? userStocks.find((h) => h.stockId === selectedStockId)
+      : undefined;
+
     const availableQuantity = userHolding?.quantity || 0;
 
     // SELL VALIDATION
