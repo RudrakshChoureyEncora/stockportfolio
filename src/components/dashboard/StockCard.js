@@ -3,9 +3,9 @@ import { useStock } from "../../context/StockCon";
 import "../../styles/Stockcard.css";
 const StockCard = ({ stock }) => {
   const { stocks } = useStock();
-  console.log("this is stock card");
-  console.log(stocks);
-  console.log(stock);
+  // console.log("this is stock card");
+  // console.log(stocks);
+  // console.log(stock);
   const userStock = stocks.find((s) => s.StockId === stock.stockId);
   if (!userStock) {
     return <div>No holdings found for {stock.symbol}</div>;

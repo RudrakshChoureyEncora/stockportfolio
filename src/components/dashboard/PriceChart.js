@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStock } from "../../context/StockCon";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Pricechart.css";
@@ -6,6 +6,24 @@ const PriceChart = () => {
   const { stocks } = useStock();
   const [selectedStock, setSelectedStock] = useState(null);
   const navigate = useNavigate();
+
+  // Move useEffect to the top, before any conditional returns
+  useEffect(() => {
+    // console.log("this is getting called");
+    // console.log(selectedStock);
+    // console.log(stocks);
+    if (stocks.length > 0 && selectedStock) {
+      const foundStock = stocks.find(
+        (s) => s.StockId === selectedStock.StockId
+      );
+      if (foundStock) {
+        // console.log(foundStock);
+        // console.log(stocks);
+        setSelectedStock(foundStock);
+      }
+    }
+  }, [stocks]);
+
   if (stocks.length === 0) {
     return (
       <div className="price-chart empty">

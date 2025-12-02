@@ -125,7 +125,7 @@ export default function OrderStock() {
             <input
               type="number"
               value={price}
-              // disabled={useCurrentPrice}
+              disabled={useCurrentPrice}
               onChange={(e) => setPrice(e.target.value)}
             />
           </label>

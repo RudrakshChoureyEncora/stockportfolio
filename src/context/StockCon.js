@@ -141,8 +141,8 @@ export const StockProvider = ({ children }) => {
       try {
         const response = await axios.get("/api/stocks");
         dispatch({ type: "SET_STOCKS", payload: response.data });
-        console.log("this is stocks getting from database changed:");
-        console.log(response);
+        // console.log("this is stocks getting from database changed:");
+        // console.log(response);
       } catch (error) {
         console.error("Error fetching stocks:", error);
       }

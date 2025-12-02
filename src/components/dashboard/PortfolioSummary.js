@@ -17,7 +17,7 @@ const PortfolioSummary = () => {
     topPerformer,
   } = calculatePortfolioSummary(userStocks, stocks);
 
-  if (userStocks.length === 0) {
+  if (userStocks.filter((stock) => stock.quantity > 0).length === 0) {
     return (
       <div className="portfolio-summary empty">
         <h2>Portfolio Summary</h2>
@@ -34,12 +34,12 @@ const PortfolioSummary = () => {
       <div className="summary-grid">
         <div className="summary-card total-value">
           <h3>Total Value</h3>
-          <div className="amount">${totalValue.toFixed(2)}</div>
+          <div className="amount">₹{totalValue.toFixed(2)}</div>
           <div className="label">Current Portfolio Value Currently</div>
         </div>
         <div className="summary-card total-invested">
           <h3>Total Invested Currently</h3>
-          <div className="amount">${totalInvested.toFixed(2)}</div>
+          <div className="amount">₹{totalInvested.toFixed(2)}</div>
           <div className="label">Total Amount Invested Currently</div>
         </div>
         <div
@@ -49,7 +49,7 @@ const PortfolioSummary = () => {
         >
           <h3>Total Return</h3>
           <div className="amount">
-            {absoluteReturn >= 0 ? "+" : ""}${absoluteReturn.toFixed(2)}
+            {absoluteReturn >= 0 ? "+" : ""}₹{absoluteReturn.toFixed(2)}
           </div>
           <div className="percentage">
             ({totalReturn >= 0 ? "+" : ""}

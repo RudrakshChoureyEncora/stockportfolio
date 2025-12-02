@@ -104,8 +104,8 @@ const StockDetails = () => {
           {percentChange}% change)
         </p>
         <p>
-          <strong>Day Change:</strong> {dayChange >= 0 ? "↗" : "↘"}{" "}
-          {Math.abs(dayChange).toFixed(2)}%
+          <strong>{dayChange >= 0 ? "Gain" : "Loss"}:</strong>{" "}
+          {dayChange >= 0 ? "↗" : "↘"} {Math.abs(dayChange).toFixed(2)}%
         </p>
 
         <div className="stock-chart">

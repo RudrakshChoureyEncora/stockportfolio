@@ -1,7 +1,7 @@
 {
   "name": "stockportfolio",
   "version": "0.1.0",
-  "proxy": "http://localhost:8080",
+  "proxy": "http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com",
   "private": true,
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.940.0",
