@@ -335,7 +335,7 @@ export const RUProvider = ({ children }) => {
       };
 
       const response = await axios.post(
-        "http://localhost:8080/api/register",
+        "http://13.235.70.253:8080/api/register",
         payload
       );
 

@@ -139,7 +139,9 @@ export const StockProvider = ({ children }) => {
   useEffect(() => {
     const fetchStocks = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/stocks");
+        const response = await axios.get(
+          "http://13.235.70.253:8080/api/stocks"
+        );
         dispatch({ type: "SET_STOCKS", payload: response.data });
         // console.log("this is stocks getting from database changed:");
         // console.log(response);
@@ -185,7 +187,7 @@ export const StockProvider = ({ children }) => {
   const addStock = async (symbol, companyName, currentPrice) => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/admin/stocks/add",
+        "http://13.235.70.253:8080/api/admin/stocks/add",
         {
           companyName,
           currentPrice,
@@ -231,7 +233,7 @@ export const StockProvider = ({ children }) => {
   const updateStock = async (stock) => {
     try {
       const response = await axios.put(
-        "http://localhost:8080/api/admin/stocks/update",
+        "http://13.235.70.253:8080/api/admin/stocks/update",
         stock // axios automatically JSON.stringify's objects
       );
 

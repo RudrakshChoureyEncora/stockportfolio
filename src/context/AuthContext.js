@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const response = await axios.post("http://localhost:8080/api/login", {
+      const response = await axios.post("http://13.235.70.253:8080/api/login", {
         email: email,
         password: password,
       });
@@ -120,7 +120,7 @@ export const AuthProvider = ({ children }) => {
       // console.log(orderData);
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/portfolio/update",
+          "http://13.235.70.253:8080/api/portfolio/update",
           orderData
         );
 
@@ -200,7 +200,7 @@ export const AuthProvider = ({ children }) => {
   const getAllUsers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/admin/allUsers"
+        "http://13.235.70.253:8080/api/admin/allUsers"
       );
       console.log("API Response:", response.data); // debug
       return {
@@ -237,7 +237,7 @@ export const AuthProvider = ({ children }) => {
   const updateUser = async (user) => {
     try {
       const response = await axios.put(
-        "http://localhost:8080/api/admin/user/update",
+        "http://13.235.70.253:8080/api/admin/user/update",
         user // axios automatically JSON.stringify's objects
       );
 
