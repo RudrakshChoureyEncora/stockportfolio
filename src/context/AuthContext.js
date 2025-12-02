@@ -57,10 +57,13 @@ export const AuthProvider = ({ children }) => {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const response = await axios.post("http://13.235.70.253:8080/api/login", {
-        email: email,
-        password: password,
-      });
+      const response = await axios.post(
+        "http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/login",
+        {
+          email: email,
+          password: password,
+        }
+      );
       console.log(response);
       // If API returned success and user exists
       if (response.status === 200) {
@@ -120,7 +123,7 @@ export const AuthProvider = ({ children }) => {
       // console.log(orderData);
       try {
         const response = await axios.post(
-          "http://13.235.70.253:8080/api/portfolio/update",
+          "http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/portfolio/update",
           orderData
         );
 
@@ -200,7 +203,7 @@ export const AuthProvider = ({ children }) => {
   const getAllUsers = async () => {
     try {
       const response = await axios.get(
-        "http://13.235.70.253:8080/api/admin/allUsers"
+        "http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/admin/allUsers"
       );
       console.log("API Response:", response.data); // debug
       return {
@@ -237,7 +240,7 @@ export const AuthProvider = ({ children }) => {
   const updateUser = async (user) => {
     try {
       const response = await axios.put(
-        "http://13.235.70.253:8080/api/admin/user/update",
+        "http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/admin/user/update",
         user // axios automatically JSON.stringify's objects
       );
 

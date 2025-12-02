@@ -335,7 +335,7 @@ export const RUProvider = ({ children }) => {
       };
 
       const response = await axios.post(
-        "http://13.235.70.253:8080/api/register",
+        "http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/register",
         payload
       );
 

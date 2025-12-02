@@ -140,7 +140,7 @@ export const StockProvider = ({ children }) => {
     const fetchStocks = async () => {
       try {
         const response = await axios.get(
-          "http://13.235.70.253:5000/api/stocks"
+          "http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/stocks"
         );
         dispatch({ type: "SET_STOCKS", payload: response.data });
         // console.log("this is stocks getting from database changed:");
@@ -187,7 +187,7 @@ export const StockProvider = ({ children }) => {
   const addStock = async (symbol, companyName, currentPrice) => {
     try {
       const response = await axios.post(
-        "http://13.235.70.253:8080/api/admin/stocks/add",
+        "http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/admin/stocks/add",
         {
           companyName,
           currentPrice,
@@ -233,7 +233,7 @@ export const StockProvider = ({ children }) => {
   const updateStock = async (stock) => {
     try {
       const response = await axios.put(
-        "http://13.235.70.253:8080/api/admin/stocks/update",
+        "http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/admin/stocks/update",
         stock // axios automatically JSON.stringify's objects
       );
 
