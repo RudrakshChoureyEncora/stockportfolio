@@ -334,7 +334,10 @@ export const RUProvider = ({ children }) => {
         investmentGoal: state.investmentProfile.investmentGoal,
       };
 
-      const response = await axios.post("/api/register", payload);
+      const response = await axios.post(
+        "http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/register",
+        payload
+      );
 
       if (response.status === 200 || response.status === 201) {
         dispatch({ type: "SET_SUBMITTED", payload: true });

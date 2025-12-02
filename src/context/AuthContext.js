@@ -57,10 +57,13 @@ export const AuthProvider = ({ children }) => {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const response = await axios.post("/api/login", {
-        email: email,
-        password: password,
-      });
+      const response = await axios.post(
+        "http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/login",
+        {
+          email: email,
+          password: password,
+        }
+      );
       console.log(response);
       // If API returned success and user exists
       if (response.status === 200) {
@@ -119,7 +122,10 @@ export const AuthProvider = ({ children }) => {
       // console.log("this is in auth con");
       // console.log(orderData);
       try {
-        const response = await axios.post("/api/portfolio/update", orderData);
+        const response = await axios.post(
+          "http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/portfolio/update",
+          orderData
+        );
 
         if (response.status === 200) {
           setLoading(false);
@@ -196,7 +202,9 @@ export const AuthProvider = ({ children }) => {
 
   const getAllUsers = async () => {
     try {
-      const response = await axios.get("/api/admin/allUsers");
+      const response = await axios.get(
+        "http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/admin/allUsers"
+      );
       console.log("API Response:", response.data); // debug
       return {
         success: true,
@@ -232,7 +240,7 @@ export const AuthProvider = ({ children }) => {
   const updateUser = async (user) => {
     try {
       const response = await axios.put(
-        "/api/admin/user/update",
+        "http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/admin/user/update",
         user // axios automatically JSON.stringify's objects
       );
 
