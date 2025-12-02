@@ -213,7 +213,9 @@ export const StockProvider = ({ children }) => {
 
   const removeStock = async (stockId) => {
     try {
-      const response = await axios.delete(`/api/admin/deleteStock/${stockId}`);
+      const response = await axios.delete(
+        `http://stockify-env.eba-2erwktvh.ap-south-1.elasticbeanstalk.com/api/admin/deleteStock/${stockId}`
+      );
 
       return {
         success: true,
