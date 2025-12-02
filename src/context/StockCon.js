@@ -140,7 +140,7 @@ export const StockProvider = ({ children }) => {
     const fetchStocks = async () => {
       try {
         const response = await axios.get(
-          "http://13.235.70.253:8080/api/stocks"
+          "http://13.235.70.253:5000/api/stocks"
         );
         dispatch({ type: "SET_STOCKS", payload: response.data });
         // console.log("this is stocks getting from database changed:");
