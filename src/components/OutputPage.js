@@ -1,29 +1,32 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import "../styles/OutputPages.css";
 
 const OutputPage = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // <-- get location from hook
-  const { state } = location || {}; // <-- prevent destructuring undefined
-
-  const handleGoBack = () => {
-    navigate(-1);
-  };
-
-  const handleGoHome = () => {
-    navigate("/");
-  };
+  const location = useLocation();
+  const { state } = location || {};
 
   return (
-    <div>
-      {state?.success ? (
-        <p style={{ color: "green" }}>Success: {state.data}</p>
-      ) : (
-        <p style={{ color: "red" }}>Error: {state?.error || "Unknown error"}</p>
-      )}
+    <div className="output-container">
+      <p
+        className={`output-message ${
+          state?.success ? "output-success" : "output-error"
+        }`}
+      >
+        {state?.success
+          ? `Success: ${state.data}`
+          : `Error: ${state?.error || "Unknown error"}`}
+      </p>
 
-      <button onClick={handleGoBack}>Go Back</button>
-      <button onClick={handleGoHome}>Go to Home</button>
+      <div className="output-buttons">
+        <button className="go-back" onClick={() => navigate(-1)}>
+          Go Back
+        </button>
+        <button className="go-home" onClick={() => navigate("/")}>
+          Go to Home
+        </button>
+      </div>
     </div>
   );
 };

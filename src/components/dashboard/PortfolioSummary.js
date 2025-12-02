@@ -64,7 +64,9 @@ const PortfolioSummary = () => {
       </div>
       {topPerformer && topPerformer.return > -Infinity && (
         <div className="performance-highlight">
-          <span className="highlight-label">Top Performer:</span>
+          <span className="highlight-label">
+            Top Performer in portfolio history:
+          </span>
           <span className="highlight-stock">{topPerformer.symbol}</span>
           <span
             className={`highlight-return ${

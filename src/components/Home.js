@@ -31,7 +31,7 @@ const Home = () => {
         </p>
       )}
 
-      <h2 className="section-title">🔥 Available Stocks</h2>
+      <h2 className="section-title"> Available Stocks</h2>
 
       {/* LOADING */}
       {loading ? (

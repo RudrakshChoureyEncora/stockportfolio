@@ -1,48 +1,50 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 const RegisterUserContext = createContext();
 
+// ---------------------- //
+//   CUSTOM CONTEXT HOOK
+// ---------------------- //
 export const useRUContext = () => {
   const context = useContext(RegisterUserContext);
   if (!context) {
-    throw new Error("useRUContext must be within a proider");
+    throw new Error("useRUContext must be used inside RUProvider");
   }
   return context;
 };
 
+// ---------------------- //
+//     INITIAL STATE
+// ---------------------- //
 const initialState = {
   currentStep: 1,
   errors: {},
   isSubmitted: false,
-  userId: "", // Primary Key
-  email: "", // Secondary Index
+  userId: "",
+  email: "",
   username: "",
   password: "",
   personalInfo: {},
   investmentProfile: {},
 };
 
+// ---------------------- //
+//        REDUCER
+// ---------------------- //
 const RUReducer = (state, action) => {
   switch (action.type) {
     case "SET_STEP":
-      return {
-        ...state,
-        currentStep: action.payload,
-      };
+      return { ...state, currentStep: action.payload };
 
     case "UPDATE_FIELD":
-      return {
-        ...state,
-        [action.payload.key]: action.payload.value,
-      };
+      return { ...state, [action.payload.key]: action.payload.value };
 
     case "UPDATE_PERSONAL_INFO":
       return {
         ...state,
-        personalInfo: {
-          ...state.personalInfo,
-          ...action.payload,
-        },
+        personalInfo: { ...state.personalInfo, ...action.payload },
       };
 
     case "UPDATE_INVESTMENT_PROFILE":
@@ -55,22 +57,13 @@ const RUReducer = (state, action) => {
       };
 
     case "SET_ERRORS":
-      return {
-        ...state,
-        errors: { ...state.errors, ...action.payload },
-      };
+      return { ...state, errors: { ...state.errors, ...action.payload } };
 
     case "CLEAR_ERRORS":
-      return {
-        ...state,
-        errors: {},
-      };
+      return { ...state, errors: {} };
 
     case "SET_SUBMITTED":
-      return {
-        ...state,
-        isSubmitted: action.payload,
-      };
+      return { ...state, isSubmitted: action.payload };
 
     case "RESET":
       return initialState;
@@ -80,13 +73,18 @@ const RUReducer = (state, action) => {
   }
 };
 
+// ---------------------- //
+//        PROVIDER
+// ---------------------- //
 export const RUProvider = ({ children }) => {
   const [state, dispatch] = useReducer(RUReducer, initialState);
+  const navigate = useNavigate(); // ✅ Correct usage
 
-  //loading saved data if available from the local storage :
+  // ----------------------------------- //
+  // Load saved data from localStorage
+  // ----------------------------------- //
   useEffect(() => {
     const savedUser = localStorage.getItem("registerUserData");
-
     if (savedUser) {
       const {
         userId,
@@ -98,49 +96,37 @@ export const RUProvider = ({ children }) => {
         currentStep,
       } = JSON.parse(savedUser);
 
-      // Restore simple fields
       dispatch({
         type: "UPDATE_FIELD",
         payload: { key: "userId", value: userId },
       });
-
       dispatch({
         type: "UPDATE_FIELD",
         payload: { key: "email", value: email },
       });
-
       dispatch({
         type: "UPDATE_FIELD",
         payload: { key: "username", value: username },
       });
-
       dispatch({
         type: "UPDATE_FIELD",
         payload: { key: "password", value: password },
       });
 
-      // Restore nested objects
-      dispatch({
-        type: "UPDATE_PERSONAL_INFO",
-        payload: personalInfo,
-      });
-
+      dispatch({ type: "UPDATE_PERSONAL_INFO", payload: personalInfo });
       dispatch({
         type: "UPDATE_INVESTMENT_PROFILE",
         payload: investmentProfile,
       });
 
-      // Restore step
-      dispatch({
-        type: "SET_STEP",
-        payload: currentStep,
-      });
+      dispatch({ type: "SET_STEP", payload: currentStep });
     }
   }, []);
 
-  //   similarly saving in local storage:
+  // ----------------------------------- //
+  // Save data to localStorage
+  // ----------------------------------- //
   useEffect(() => {
-    // Only save if user has started filling OR moved steps
     const hasData =
       state.email ||
       state.username ||
@@ -171,11 +157,15 @@ export const RUProvider = ({ children }) => {
     state.currentStep,
   ]);
 
+  // ---------------------- //
+  //   STEP HANDLERS
+  // ---------------------- //
   const nextStep = () => {
     if (state.currentStep < 4) {
       dispatch({ type: "SET_STEP", payload: state.currentStep + 1 });
     }
   };
+
   const prevStep = () => {
     if (state.currentStep > 1) {
       dispatch({ type: "SET_STEP", payload: state.currentStep - 1 });
@@ -188,36 +178,33 @@ export const RUProvider = ({ children }) => {
     }
   };
 
-  const setErrors = (errors) => {
+  const setErrors = (errors) =>
     dispatch({ type: "SET_ERRORS", payload: errors });
-  };
+  const clearErrors = () => dispatch({ type: "CLEAR_ERRORS" });
 
-  const clearErrors = () => {
-    dispatch({ type: "CLEAR_ERRORS" });
-  };
-
-  const updatePersonalInfo = (data) => {
+  const updatePersonalInfo = (data) =>
     dispatch({ type: "UPDATE_PERSONAL_INFO", payload: data });
-  };
-  const updateField = (data) => {
+
+  const updateField = (data) =>
     dispatch({ type: "UPDATE_FIELD", payload: data });
-  };
 
-  const updateInvestmentProfile = (data) => {
+  const updateInvestmentProfile = (data) =>
     dispatch({ type: "UPDATE_INVESTMENT_PROFILE", payload: data });
-  };
 
+  // ---------------------- //
+  //    VALIDATION LOGIC
+  // ---------------------- //
   const validateCurrentStep = () => {
     const errors = {};
 
     switch (state.currentStep) {
-      case 1: // Personal Info
-        if (!state.personalInfo.firstName?.trim()) {
+      case 1:
+        if (!state.personalInfo.firstName?.trim())
           errors.firstName = "First name is required";
-        }
-        if (!state.personalInfo.lastName?.trim()) {
+
+        if (!state.personalInfo.lastName?.trim())
           errors.lastName = "Last name is required";
-        }
+
         if (!state.personalInfo.phone?.trim()) {
           errors.phone = "Phone number is required";
         } else if (
@@ -225,20 +212,20 @@ export const RUProvider = ({ children }) => {
         ) {
           errors.phone = "Phone number must be 10 digits";
         }
-        if (!state.personalInfo.dateOfBirth?.trim()) {
+
+        if (!state.personalInfo.dateOfBirth?.trim())
           errors.dateOfBirth = "Date of birth is required";
-        }
         break;
 
-      case 2: // Account Security
+      case 2:
         if (!state.email?.trim()) {
           errors.email = "Email is required";
         } else if (!/\S+@\S+\.\S+/.test(state.email)) {
           errors.email = "Email is invalid";
         }
-        if (!state.username?.trim()) {
-          errors.username = "Username is required";
-        }
+
+        if (!state.username?.trim()) errors.username = "Username is required";
+
         if (!state.password?.trim()) {
           errors.password = "Password is required";
         } else if (state.password.length < 6) {
@@ -246,16 +233,15 @@ export const RUProvider = ({ children }) => {
         }
         break;
 
-      case 3: // Investment Profile
-        if (!state.investmentProfile.riskAppetite?.trim()) {
+      case 3:
+        if (!state.investmentProfile.riskAppetite?.trim())
           errors.riskAppetite = "Risk appetite is required";
-        }
-        if (!state.investmentProfile.experience?.trim()) {
+
+        if (!state.investmentProfile.experience?.trim())
           errors.experience = "Experience level is required";
-        }
-        if (!state.investmentProfile.investmentGoal?.trim()) {
+
+        if (!state.investmentProfile.investmentGoal?.trim())
           errors.investmentGoal = "Investment goal is required";
-        }
         break;
 
       default:
@@ -271,56 +257,52 @@ export const RUProvider = ({ children }) => {
     return true;
   };
 
+  // ---------------------- //
+  //     SUBMIT LOGIC
+  // ---------------------- //
   const register = async () => {
     const allErrors = {};
 
-    // Step 1: Personal Info
-    if (!state.personalInfo.firstName?.trim()) {
+    // Validate Step 1
+    if (!state.personalInfo.firstName?.trim())
       allErrors.firstName = "First name is required";
-    }
-    if (!state.personalInfo.lastName?.trim()) {
+    if (!state.personalInfo.lastName?.trim())
       allErrors.lastName = "Last name is required";
-    }
+
     if (!state.personalInfo.phone?.trim()) {
       allErrors.phone = "Phone number is required";
     } else if (!/^\d{10}$/.test(state.personalInfo.phone.replace(/\D/g, ""))) {
-      allErrors.phone = "Phone number must be 10 digits";
+      allErrors.phone = "Phone must be 10 digits";
     }
-    if (!state.personalInfo.dateOfBirth?.trim()) {
+
+    if (!state.personalInfo.dateOfBirth?.trim())
       allErrors.dateOfBirth = "Date of birth is required";
-    }
 
-    // Step 2: Account Security
+    // Validate Step 2
+    if (!state.email?.trim()) allErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(state.email))
+      allErrors.email = "Invalid email";
 
-    if (!state.email?.trim()) {
-      allErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(state.email)) {
-      allErrors.email = "Email is invalid";
-    }
-    if (!state.username?.trim()) {
-      allErrors.username = "Username is required";
-    }
-    if (!state.password?.trim()) {
-      allErrors.password = "Password is required";
-    } else if (state.password.length < 6) {
-      allErrors.password = "Password must be at least 6 characters";
-    }
+    if (!state.username?.trim()) allErrors.username = "Username is required";
 
-    // Step 3: Investment Profile
-    if (!state.investmentProfile.riskAppetite?.trim()) {
-      allErrors.riskAppetite = "Risk appetite is required";
-    }
-    if (!state.investmentProfile.experience?.trim()) {
-      allErrors.experience = "Experience level is required";
-    }
-    if (!state.investmentProfile.investmentGoal?.trim()) {
-      allErrors.investmentGoal = "Investment goal is required";
-    }
+    if (!state.password?.trim()) allErrors.password = "Password is required";
+    else if (state.password.length < 6)
+      allErrors.password = "Password too short";
 
+    // Validate Step 3
+    if (!state.investmentProfile.riskAppetite?.trim())
+      allErrors.riskAppetite = "Risk appetite required";
+
+    if (!state.investmentProfile.experience?.trim())
+      allErrors.experience = "Experience required";
+
+    if (!state.investmentProfile.investmentGoal?.trim())
+      allErrors.investmentGoal = "Goal required";
+
+    // Return errors
     if (Object.keys(allErrors).length > 0) {
       setErrors(allErrors);
 
-      // Navigate to first step with errors
       if (
         allErrors.firstName ||
         allErrors.lastName ||
@@ -337,41 +319,44 @@ export const RUProvider = ({ children }) => {
       return false;
     }
 
-    // Simulate API call or actual save to DynamoDB
+    // FINALLY SUBMIT TO API
     try {
-      // Example: await userService.saveUser(state);
       const payload = {
         email: state.email,
         username: state.username,
         password: state.password,
         firstName: state.personalInfo.firstName,
         lastName: state.personalInfo.lastName,
-        phone: state.personalInfo.phone.replace(/\D/g, ""), // remove formatting
+        phone: state.personalInfo.phone.replace(/\D/g, ""),
         dateOfBirth: state.personalInfo.dateOfBirth,
         riskAppetite: state.investmentProfile.riskAppetite,
         experience: state.investmentProfile.experience,
         investmentGoal: state.investmentProfile.investmentGoal,
       };
 
-      console.log("📤 Sending payload:", payload);
-
       const response = await axios.post("/api/register", payload);
 
       if (response.status === 200 || response.status === 201) {
-        console.log("✅ Registration success:", response.data);
-
         dispatch({ type: "SET_SUBMITTED", payload: true });
-
-        // Clear any saved local data
         localStorage.removeItem("registerUserData");
-
         return true;
       } else {
-        console.error("❌ Registration failed:", response);
+        navigate("/output", {
+          state: { success: false, error: response.data },
+        });
         return false;
       }
     } catch (error) {
-      console.error("User registration submission failed:", error);
+      navigate("/output", {
+        state: {
+          success: false,
+          error:
+            error.toString() ===
+            "AxiosError: Request failed with status code 409"
+              ? "User with same email already exist"
+              : error.toString(),
+        },
+      });
       return false;
     }
   };
@@ -381,31 +366,27 @@ export const RUProvider = ({ children }) => {
     localStorage.removeItem("registerUserData");
   };
 
+  // ---------------------- //
+  //      EXPORT API
+  // ---------------------- //
   const value = {
-    // State
     currentStep: state.currentStep,
     errors: state.errors,
     isSubmitted: state.isSubmitted,
 
-    // Personal Info
     personalInfo: state.personalInfo,
-
-    // Account Security
     userId: state.userId,
     email: state.email,
     username: state.username,
     password: state.password,
-
-    // Investment Profile
     investmentProfile: state.investmentProfile,
 
-    // Actions
     nextStep,
     prevStep,
     goToStep,
-    updatePersonalInfo, // Function to update personalInfo
-    updateField, // Function to update userId/email/username/password
-    updateInvestmentProfile, // Function to update investmentProfile
+    updatePersonalInfo,
+    updateField,
+    updateInvestmentProfile,
     validateCurrentStep,
     register,
     reset,

@@ -38,8 +38,8 @@ export default function OrderStock() {
     console.log(userStocks);
     const userHolding = userStocks.find((h) => h.stockId === selectedStockId);
 
-    console.log("-------------------");
-    console.log(userHolding);
+    // console.log("-------------------");
+    // console.log(userHolding);
     const availableQuantity = userHolding?.quantity || 0;
 
     // SELL VALIDATION

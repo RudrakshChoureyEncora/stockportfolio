@@ -134,7 +134,7 @@ export const AuthProvider = ({ children }) => {
           );
 
           setUserStocks(portfolioResponse.data);
-          return { success: true };
+          return { success: true, data: "order placed Successfully" };
         } else {
           setLoading(false);
           // alert("Failed to submit order. Please try again.");

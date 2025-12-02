@@ -21,19 +21,10 @@ const UserFormNavigation = () => {
 
   const handleSubmit = async () => {
     const success = await register();
-    if (!success) {
-      alert("Please fix the errors before submitting.");
-    }
   };
 
   const handleReset = () => {
-    if (
-      window.confirm(
-        "Are you sure you want to reset the registration? All data will be lost."
-      )
-    ) {
-      reset();
-    }
+    reset();
   };
 
   if (isSubmitted) {
