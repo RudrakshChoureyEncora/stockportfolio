@@ -144,7 +144,7 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         setLoading(false);
         // alert("Network error. Please check your connection.");
-        console.error("Network error:", error);
+
         return { success: false };
       }
 
@@ -196,9 +196,7 @@ export const AuthProvider = ({ children }) => {
 
   const getAllUsers = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/api/admin/allUsers"
-      );
+      const response = await axios.get("/api/admin/allUsers");
       console.log("API Response:", response.data); // debug
       return {
         success: true,
@@ -215,11 +213,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Delete a user by ID
-  const deleteUser = async (userId) => {
+  const deleteUser = async (emailId) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:8080/api/admin/deleteUser/${userId}`
-      );
+      const response = await axios.delete(`/api/admin/deleteUser/${emailId}`);
       console.log(response);
       return {
         success: true,
@@ -230,6 +226,30 @@ export const AuthProvider = ({ children }) => {
         success: false,
         error: error.response?.data || error.message,
       };
+    }
+  };
+
+  const updateUser = async (user) => {
+    try {
+      const response = await axios.put(
+        "/api/admin/user/update",
+        user // axios automatically JSON.stringify's objects
+      );
+
+      console.log("user updated");
+      console.log(user);
+
+      return { success: true, data: response.data };
+    } catch (error) {
+      console.error("Error updating stock:", error);
+
+      if (error.response) {
+        // Server responded with a status outside 2xx
+        return { success: false, error: "Failed to update stock" };
+      } else {
+        // Network or other error
+        return { success: false, error: "Network error" };
+      }
     }
   };
 
@@ -244,6 +264,7 @@ export const AuthProvider = ({ children }) => {
     orderAction,
     getAllUsers,
     deleteUser,
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

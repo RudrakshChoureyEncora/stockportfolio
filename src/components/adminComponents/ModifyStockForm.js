@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import "../../styles/ModifyStockForm.css";
 import { useStock } from "../../context/StockCon";
+import { useNavigate } from "react-router-dom";
 const ModifyStockForm = ({ stock, onBack }) => {
   const [symbol, setSymbol] = useState(stock.symbol);
   const [name, setName] = useState(stock.name);
   const { updateStock } = useStock();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,9 +21,9 @@ const ModifyStockForm = ({ stock, onBack }) => {
     const result = await updateStock(stockToUpdate);
 
     if (result.success) {
-      console.log("Added!", result.data);
+      navigate("/output", { state: result });
     } else {
-      console.log("Failed:", result.error);
+      navigate("/output", { state: result });
     }
   };
 

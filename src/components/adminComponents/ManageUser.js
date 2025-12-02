@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import ModifyUserForm from "./ModifyUser";
+import "../../styles/ManageUser.css";
+import { useNavigate } from "react-router-dom";
 
 const ManageUser = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const { getAllUsers, deleteUser } = useAuth();
+  const navigate = useNavigate();
+
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showModifyForm, setShowModifyForm] = useState(false);
+
   // Fetch all users
   const fetchUsers = async () => {
     setLoading(true);
@@ -17,23 +25,30 @@ const ManageUser = () => {
     }
   };
 
-  // Delete user
-  const deleteUserMethod = async (userId) => {
+  const deleteUserMethod = async (emailId) => {
     setLoading(true);
-    const res = await deleteUser(userId);
-    if (res.success) {
-      // remove user from state
-      setLoading(false);
-      fetchUsers();
+    const res = await deleteUser(emailId);
 
-      alert("User deleted successfully!");
+    if (res.success) {
+      fetchUsers();
+      // navigate("/output", { state: res });
     } else {
-      console.error("Delete failed:", res.error);
+      // navigate("/output", { state: res });
     }
   };
 
-  const modifyUser = (userId) => {
-    alert(`Modify user: ${userId}`);
+  const handleModify = (user) => {
+    setSelectedUser(user);
+    setShowModifyForm(true);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const handleBack = () => {
+    setSelectedUser(null);
+    setShowModifyForm(false);
   };
 
   useEffect(() => {
@@ -41,97 +56,66 @@ const ManageUser = () => {
   }, []);
 
   return (
-    <>
-      {loading ? (
-        <p>Loading users...</p>
-      ) : (
-        <div style={styles.container}>
-          <h1>Manage Users</h1>
-
-          <div style={styles.list}>
-            {users.map((user) => (
-              <div key={user.userId} style={styles.card}>
-                <div style={styles.info}>
-                  <p>
-                    <strong>User ID:</strong> {user.userId}
-                  </p>
-                  <p>
-                    <strong>Name:</strong> {user.firstName} {user.lastName}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {user.email}
-                  </p>
-                  <p>
-                    <strong>Role:</strong> {user.role}
-                  </p>
+    <div className="manage-users">
+      <div className="manage-users-layout">
+        {/* LEFT SIDE LIST */}
+        <div className="users-content">
+          <h2>Manage Users</h2>
+          {loading ? (
+            <p>Loading users...</p>
+          ) : (
+            <div className="user-list">
+              {users.map((user) => (
+                <div key={user.userId} className="user-card">
+                  <div className="info">
+                    <p>
+                      <strong>ID:</strong> {user.userId}
+                    </p>
+                    <p>
+                      <strong>Name:</strong> {user.firstName} {user.lastName}
+                    </p>
+                    <p>
+                      <strong>Email:</strong> {user.email}
+                    </p>
+                    <p>
+                      <strong>Role:</strong> {user.role}
+                    </p>
+                  </div>
+                  <div className="actions">
+                    <button
+                      className="modify-btn"
+                      onClick={() => handleModify(user)}
+                    >
+                      Modify
+                    </button>
+                    <button
+                      className="delete-btn"
+                      onClick={() => deleteUserMethod(user.email)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-
-                <div style={styles.actions}>
-                  <button
-                    style={styles.modifyBtn}
-                    onClick={() => modifyUser(user.userId)}
-                  >
-                    Modify
-                  </button>
-
-                  <button
-                    style={styles.deleteBtn}
-                    onClick={() => deleteUserMethod(user.userId)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
-      )}
-    </>
-  );
-};
 
-// Styles
-const styles = {
-  container: {
-    padding: "20px",
-  },
-  list: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-  },
-  card: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "15px",
-    background: "#0f172a",
-    borderRadius: "8px",
-    border: "1px solid #ccc",
-  },
-  info: {
-    flex: 1,
-  },
-  actions: {
-    display: "flex",
-    gap: "10px",
-  },
-  modifyBtn: {
-    padding: "8px 14px",
-    background: "#007bff",
-    border: "none",
-    borderRadius: "5px",
-    color: "white",
-    cursor: "pointer",
-  },
-  deleteBtn: {
-    padding: "8px 14px",
-    background: "#dc3545",
-    border: "none",
-    borderRadius: "5px",
-    color: "white",
-    cursor: "pointer",
-  },
+        {/* RIGHT SIDE SIDEBAR */}
+        <div className="users-sidebar">
+          {showModifyForm ? (
+            <ModifyUserForm
+              user={selectedUser}
+              onBack={handleBack}
+              onUpdated={fetchUsers}
+            />
+          ) : (
+            <p>Select a user to modify.</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ManageUser;

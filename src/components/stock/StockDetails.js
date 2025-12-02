@@ -13,9 +13,7 @@ const StockDetails = () => {
   const stock = stocks.find((s) => s.StockId === StockId);
   const { user } = useAuth();
   const [showModifyForm, setShowModifyForm] = useState(false);
-  // console.log("this is in stockdetail");
-  // console.log(stocks);
-  // console.log();
+
   if (!stock) {
     return <p>Stock not found</p>;
   }

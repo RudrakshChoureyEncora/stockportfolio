@@ -9,6 +9,7 @@ import { RUProvider } from "./context/RegisterUserContext";
 import { StockProvider } from "./context/StockCon";
 import PortfolioTracker from "../src/components/PortfolioTracker";
 import Home from "./components/Home";
+import OutputPage from "./components/OutputPage";
 import StockDetails from "./components/stock/StockDetails";
 import OrderStock from "./components/dashboard/OrderStock";
 import News from "./News";
@@ -32,6 +33,7 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/news" element={<News />} />
+                  <Route path="/output" element={<OutputPage />} />
                   <Route path="/stock/:StockId" element={<StockDetails />} />
                   <Route
                     path="/register"
@@ -45,7 +47,7 @@ function App() {
                   <Route
                     path="/dashboard"
                     element={
-                      <ProtectedRoute>
+                      <ProtectedRoute requiredRole="USER">
                         <div className="App">
                           <PortfolioTracker />
                         </div>
@@ -63,7 +65,7 @@ function App() {
                   <Route
                     path="/orderStock"
                     element={
-                      <ProtectedRoute>
+                      <ProtectedRoute equiredRole="USER">
                         <OrderStock />
                       </ProtectedRoute>
                     }

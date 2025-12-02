@@ -139,10 +139,10 @@ export const StockProvider = ({ children }) => {
   useEffect(() => {
     const fetchStocks = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/stocks");
+        const response = await axios.get("/api/stocks");
         dispatch({ type: "SET_STOCKS", payload: response.data });
-        // console.log("this is stocks getting from database:");
-        // console.log(response);
+        console.log("this is stocks getting from database changed:");
+        console.log(response);
       } catch (error) {
         console.error("Error fetching stocks:", error);
       }
@@ -152,7 +152,7 @@ export const StockProvider = ({ children }) => {
     fetchStocks();
 
     // Set interval to fetch every 60 seconds
-    const intervalId = setInterval(fetchStocks, 6000);
+    const intervalId = setInterval(fetchStocks, 1000);
 
     // Clear interval on component unmount
     return () => clearInterval(intervalId);
@@ -184,18 +184,15 @@ export const StockProvider = ({ children }) => {
   // -----------------------------------------------------------------------------------------------------------------------------------
   const addStock = async (symbol, companyName, currentPrice) => {
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/admin/stocks/add",
-        {
-          companyName,
-          currentPrice,
-          symbol,
-        }
-      );
+      const response = await axios.post("/api/admin/stocks/add", {
+        companyName,
+        currentPrice,
+        symbol,
+      });
 
       return {
         success: true,
-        data: response.data,
+        data: "added the stock succesfully",
       };
     } catch (error) {
       console.error("Error adding stock:", error);
@@ -211,13 +208,11 @@ export const StockProvider = ({ children }) => {
 
   const removeStock = async (stockId) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:8080/api/admin/deleteStock/${stockId}`
-      );
+      const response = await axios.delete(`/api/admin/deleteStock/${stockId}`);
 
       return {
         success: true,
-        data: response.data,
+        data: "removed the user successfully",
       };
     } catch (error) {
       console.error("Error deleting stock:", error);
@@ -229,27 +224,28 @@ export const StockProvider = ({ children }) => {
     }
   };
   // ------------------------------------------------------------------------------------------------------------------------------------
+
   const updateStock = async (stock) => {
     try {
-      const response = await fetch("/admin/stocks/update", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(stock),
-      });
+      const response = await axios.put(
+        "/api/admin/stocks/update",
+        stock // axios automatically JSON.stringify's objects
+      );
 
-      if (response.ok) {
-        console.log("Stock updated");
-        console.log(stock);
-        return { success: true };
-      } else {
-        console.error("Failed to update stock");
-        return { success: false, error: "Failed to update stock" };
-      }
+      console.log("Stock updated");
+      console.log(stock);
+
+      return { success: true, data: "user updated successfully" };
     } catch (error) {
       console.error("Error updating stock:", error);
-      return { success: false, error: "Network error" };
+
+      if (error.response) {
+        // Server responded with a status outside 2xx
+        return { success: false, error: "Failed to update stock" };
+      } else {
+        // Network or other error
+        return { success: false, error: "Network error" };
+      }
     }
   };
 

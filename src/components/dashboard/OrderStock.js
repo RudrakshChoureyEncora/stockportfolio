@@ -6,7 +6,7 @@ import "../../styles/OrderStock.css";
 
 export default function OrderStock() {
   const { stocks } = useStock();
-  const { user, orderAction } = useAuth();
+  const { user, orderAction, userStocks } = useAuth();
   const { search } = useLocation();
   const params = new URLSearchParams(search);
 
@@ -35,6 +35,24 @@ export default function OrderStock() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(userStocks);
+    const userHolding = userStocks.find((h) => h.stockId === selectedStockId);
+
+    console.log("-------------------");
+    console.log(userHolding);
+    const availableQuantity = userHolding?.quantity || 0;
+
+    // SELL VALIDATION
+    if (action === "sell" && quantity > availableQuantity) {
+      navigate("/output", {
+        state: {
+          success: false,
+          error: `You only have ${availableQuantity} shares. Cannot sell ${quantity}.`,
+        },
+      });
+      return;
+    }
+
     const quantityToSend = action === "sell" ? -quantity : quantity;
 
     const result = await orderAction(
@@ -44,13 +62,7 @@ export default function OrderStock() {
       parseFloat(price)
     );
 
-    if (result.success) {
-      const from = location.state?.from?.pathname || "/dashboard";
-      navigate(from, { replace: true });
-    } else {
-      const from = location.state?.from?.pathname || "/dashboard";
-      navigate(from, { replace: true });
-    }
+    navigate("/output", { state: result });
   };
 
   return (

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import "../../styles/AddStockForm.css";
 import { useStock } from "../../context/StockCon";
+import { useNavigate } from "react-router-dom";
 
 const AddStockForm = ({ existingStocks }) => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,8 @@ const AddStockForm = ({ existingStocks }) => {
     currentPrice: "",
     symbol: "",
   });
+  const navigate = useNavigate();
+
   const [errors, setErrors] = useState({});
   const { addStock } = useStock();
   const handleChange = (e) => {
@@ -61,9 +64,9 @@ const AddStockForm = ({ existingStocks }) => {
     );
 
     if (result.success) {
-      console.log("Added!", result.data);
+      navigate("/output", { state: result });
     } else {
-      console.log("Failed:", result.error);
+      navigate("/output", { state: result });
     }
 
     console.log(JSON.stringify(formData, null, 2));
